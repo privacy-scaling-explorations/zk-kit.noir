@@ -1,0 +1,4 @@
+[package]
+name = "merkle_trees"
+type = "lib"
+authors = ["fabianschu", "signorecello"]
