@@ -1,8 +1,12 @@
 <p align="center">
     <h1 align="center">
-        🧰 ZK-Kit (Noir)
+      <picture>
+        <source media="(prefers-color-scheme: light)" srcset="https://github.com/privacy-scaling-explorations/zk-kit.noir/assets/11427903/acd86fe6-d1a6-4052-8311-29bc784ce972">
+        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/privacy-scaling-explorations/zk-kit.noir/assets/11427903/adf1071e-1e81-4c51-b667-dee936cfb27f">
+        <img width="250" alt="Semaphore icon" src="https://github.com/semaphore-protocol/.github/blob/main/assets/semaphore-logo-dark.svg">
+      </picture>
+      <sub>Noir</sub> 
     </h1>
-    <p align="center">A monorepo of reusable Noir circuits.</p>
 </p>
 
 <p align="center">
