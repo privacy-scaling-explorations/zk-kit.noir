@@ -59,8 +59,8 @@
 -   📦 Suggest new [circuits](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=feature+%3Arocket%3A&template=---circuit.md&title=)
 -   🐛 Create a report if you find any [bugs](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=bug+%F0%9F%90%9B&template=---bug.md&title=) in the code
 
-Need inspiration? Check this list of circuits from the Atzec team:
-https://aztecnetwork.notion.site/f06968995c124de1be359459775ca2cb?v=613d3cb893dd46899a5bd3793b01e63b.
+> [!NOTE]  
+> Need inspiration? Check this list of circuits from the Atzec team: https://aztecnetwork.notion.site/f06968995c124de1be359459775ca2cb?v=613d3cb893dd46899a5bd3793b01e63b.
 
 ## 🛠 Install
 
