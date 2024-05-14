@@ -3,9 +3,9 @@
       <picture>
         <source media="(prefers-color-scheme: light)" srcset="https://github.com/privacy-scaling-explorations/zk-kit.noir/assets/11427903/acd86fe6-d1a6-4052-8311-29bc784ce972">
         <source media="(prefers-color-scheme: dark)" srcset="https://github.com/privacy-scaling-explorations/zk-kit.noir/assets/11427903/adf1071e-1e81-4c51-b667-dee936cfb27f">
-        <img width="250" alt="Semaphore icon" src="https://github.com/semaphore-protocol/.github/blob/main/assets/semaphore-logo-dark.svg">
+        <img width="250" alt="ZK-Kit logo" src="https://github.com/privacy-scaling-explorations/zk-kit.noir/assets/11427903/acd86fe6-d1a6-4052-8311-29bc784ce972">
       </picture>
-      <sub>Noir</sub> 
+      <sub>Noir</sub>
     </h1>
 </p>
 
