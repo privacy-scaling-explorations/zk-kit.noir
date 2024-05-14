@@ -49,6 +49,12 @@
 > [!IMPORTANT]  
 > Installation of [Nargo](https://noir-lang.org/getting_started/nargo_installation) required for circuit tests.
 
+## 🗂️ Repositories
+
+-   Javascript & Solidity: https://github.com/privacy-scaling-explorations/zk-kit
+-   Circom: https://github.com/privacy-scaling-explorations/zk-kit.circom
+-   Noir: https://github.com/privacy-scaling-explorations/zk-kit.noir
+
 ## 📦 Packages
 
 -   [merkle-trees](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/merkle-trees)
