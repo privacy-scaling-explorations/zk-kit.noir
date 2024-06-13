@@ -55,7 +55,8 @@
 
 ## 🗂️ Repositories
 
--   Javascript & Solidity: https://github.com/privacy-scaling-explorations/zk-kit
+-   Javascript: https://github.com/privacy-scaling-explorations/zk-kit
+-   Solidity: https://github.com/privacy-scaling-explorations/zk-kit.solidity
 -   Circom: https://github.com/privacy-scaling-explorations/zk-kit.circom
 -   Noir: https://github.com/privacy-scaling-explorations/zk-kit.noir
 
