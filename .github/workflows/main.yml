@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: tj-actions/changed-files@v44
+        id: changed-files
         with:
           files: |
             packages/**/*.{nr,toml}
