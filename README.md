@@ -50,27 +50,27 @@
 | ZK-Kit is a set of libraries (algorithms or utility functions) that can be reused in different projects and zero-knowledge protocols, making it easier for developers to access user-friendly, tested, and documented code for common tasks. ZK-Kit provides different repositories for each language - this one contains Noir circuits only. |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
-> [!IMPORTANT]  
+> [!IMPORTANT]\
 > Installation of [Nargo](https://noir-lang.org/getting_started/nargo_installation) required for circuit tests.
 
 ## 🗂️ Repositories
 
--   Javascript: https://github.com/privacy-scaling-explorations/zk-kit
--   Solidity: https://github.com/privacy-scaling-explorations/zk-kit.solidity
--   Circom: https://github.com/privacy-scaling-explorations/zk-kit.circom
--   Noir: https://github.com/privacy-scaling-explorations/zk-kit.noir
+- Javascript: https://github.com/privacy-scaling-explorations/zk-kit
+- Solidity: https://github.com/privacy-scaling-explorations/zk-kit.solidity
+- Circom: https://github.com/privacy-scaling-explorations/zk-kit.circom
+- Noir: https://github.com/privacy-scaling-explorations/zk-kit.noir
 
 ## 📦 Packages
 
--   [merkle-trees](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/merkle-trees)
+- [merkle-trees](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/merkle-trees)
 
 ## 👥 Ways to contribute
 
--   🔧 Work on [open issues](https://github.com/privacy-scaling-explorations/zk-kit.noir/contribute)
--   📦 Suggest new [circuits](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=feature+%3Arocket%3A&template=---circuit.md&title=)
--   🐛 Create a report if you find any [bugs](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=bug+%F0%9F%90%9B&template=---bug.md&title=) in the code
+- 🔧 Work on [open issues](https://github.com/privacy-scaling-explorations/zk-kit.noir/contribute)
+- 📦 Suggest new [circuits](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=feature+%3Arocket%3A&template=---circuit.md&title=)
+- 🐛 Create a report if you find any [bugs](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=bug+%F0%9F%90%9B&template=---bug.md&title=) in the code
 
-> [!NOTE]  
+> [!NOTE]\
 > Need inspiration? Check this list of circuits from the Atzec team: https://aztecnetwork.notion.site/f06968995c124de1be359459775ca2cb?v=613d3cb893dd46899a5bd3793b01e63b.
 
 ## 🛠 Install

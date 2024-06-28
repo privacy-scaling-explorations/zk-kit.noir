@@ -1,11 +1,11 @@
-use crate::{Creator, MembershipProver, NonMembershipProver, Modifier};
+use crate::{Creator, MembershipProver, Modifier, NonMembershipProver};
 
-mod tree;
 mod tests;
+mod tree;
 
 struct MerkleTree {
     hasher: fn([Field]) -> Field,
-    root: Field
+    root: Field,
 }
 
 impl Creator for MerkleTree {
@@ -19,7 +19,6 @@ impl MembershipProver<Field, HashPath> for MerkleTree {
         let root = self.calculate_root(leaf, siblings);
         assert(self.root == root);
     }
-
 }
 
 impl Modifier<Field, HashPath> for MerkleTree {
