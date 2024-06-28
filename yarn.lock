@@ -235,6 +235,55 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dprint/darwin-arm64@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/darwin-arm64@npm:0.46.3"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@dprint/darwin-x64@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/darwin-x64@npm:0.46.3"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@dprint/linux-arm64-glibc@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/linux-arm64-glibc@npm:0.46.3"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@dprint/linux-arm64-musl@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/linux-arm64-musl@npm:0.46.3"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@dprint/linux-x64-glibc@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/linux-x64-glibc@npm:0.46.3"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@dprint/linux-x64-musl@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/linux-x64-musl@npm:0.46.3"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@dprint/win32-x64@npm:0.46.3":
+  version: 0.46.3
+  resolution: "@dprint/win32-x64@npm:0.46.3"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -977,6 +1026,38 @@ __metadata:
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
   checksum: 10/55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
+  languageName: node
+  linkType: hard
+
+"dprint@npm:^0.46.3":
+  version: 0.46.3
+  resolution: "dprint@npm:0.46.3"
+  dependencies:
+    "@dprint/darwin-arm64": "npm:0.46.3"
+    "@dprint/darwin-x64": "npm:0.46.3"
+    "@dprint/linux-arm64-glibc": "npm:0.46.3"
+    "@dprint/linux-arm64-musl": "npm:0.46.3"
+    "@dprint/linux-x64-glibc": "npm:0.46.3"
+    "@dprint/linux-x64-musl": "npm:0.46.3"
+    "@dprint/win32-x64": "npm:0.46.3"
+  dependenciesMeta:
+    "@dprint/darwin-arm64":
+      optional: true
+    "@dprint/darwin-x64":
+      optional: true
+    "@dprint/linux-arm64-glibc":
+      optional: true
+    "@dprint/linux-arm64-musl":
+      optional: true
+    "@dprint/linux-x64-glibc":
+      optional: true
+    "@dprint/linux-x64-musl":
+      optional: true
+    "@dprint/win32-x64":
+      optional: true
+  bin:
+    dprint: bin.js
+  checksum: 10/9231f1097d03ce840d607b2e15fcd953dde7972860d7bc7f40bebe208e3b9454ead7e157d4a1ca4a30af4386d93840bfb9b92e297b6a8317787f310bb895e7f1
   languageName: node
   linkType: hard
 
@@ -2458,15 +2539,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.3.2":
-  version: 3.3.2
-  resolution: "prettier@npm:3.3.2"
-  bin:
-    prettier: bin/prettier.cjs
-  checksum: 10/83214e154afa5aa9b664c2506640212323eb1376b13379b2413dc351b7de0687629dca3f00ff2ec895ebd7e3a2adb7d7e231b6c77606e2358137f2150807405b
-  languageName: node
-  linkType: hard
-
 "proc-log@npm:^3.0.0":
   version: 3.0.0
   resolution: "proc-log@npm:3.0.0"
@@ -3248,8 +3320,8 @@ __metadata:
     "@commitlint/config-conventional": "npm:^18.6.2"
     changelogithub: "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch"
     czg: "npm:^1.9.1"
+    dprint: "npm:^0.46.3"
     husky: "npm:^9.0.11"
     lint-staged: "npm:^15.2.2"
-    prettier: "npm:^3.3.2"
   languageName: unknown
   linkType: soft
