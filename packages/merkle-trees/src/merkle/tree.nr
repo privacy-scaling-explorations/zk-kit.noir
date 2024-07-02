@@ -31,24 +31,20 @@ impl Calculator<Field> for MerkleTree {
     }
 
     /*
-    * Calculates two roots for a given leaf entry based on the passed array of siblings: one root 
-    * for if the leaf entry was included in the tree and one for if the leaf entry was not included
-    * in the tree. This is useful for efficiently proving the membership of leaf entries for a
-    * tree while simultaneously modifying the tree.
-    * @param entry The key and value of an entry [k, v]
-    * @param siblings Contains the siblings from bottom to top
-    * @returns Two root nodes: the first one doesn't include entry, the second does
-    */
-    fn calculate_two_roots(
-        self,
-        leaf: Field,
-        siblings: (Field, [Field]),
-    ) -> (Field, Field) {
+     * Calculates two roots for a given leaf entry based on the passed array of siblings: one root
+     * for if the leaf entry was included in the tree and one for if the leaf entry was not included
+     * in the tree. This is useful for efficiently proving the membership of leaf entries for a
+     * tree while simultaneously modifying the tree.
+     * @param entry The key and value of an entry [k, v]
+     * @param siblings Contains the siblings from bottom to top
+     * @returns Two root nodes: the first one doesn't include entry, the second does
+     */
+    fn calculate_two_roots(self, leaf: Field, siblings: (Field, [Field])) -> (Field, Field) {
         let index_bits = siblings.0.to_le_bits(siblings.1.len() as u32);
 
         let mut root_with_leaf = leaf;
         let mut root_without_leaf = 0;
-        
+
         for i in 0..siblings.1.len() {
             let sibling = siblings.1[i];
 
@@ -69,10 +65,8 @@ impl Calculator<Field> for MerkleTree {
                         root_without_leaf = (self.hasher)(&[sibling, root_without_leaf]);
                     }
                 };
-
             }
         }
         (root_without_leaf, root_with_leaf)
     }
-
 }

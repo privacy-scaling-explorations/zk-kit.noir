@@ -1,36 +1,36 @@
 {
-    "name": "zk-kit.noir",
-    "description": "A monorepo of reusable Noir circuits.",
-    "license": "MIT",
-    "repository": "git@github.com:privacy-scaling-explorations/zk-kit.noir.git",
-    "homepage": "https://github.com/privacy-scaling-explorations/zk-kit.noir",
-    "bugs": "https://github.com/privacy-scaling-explorations/zk-kit.noir/issues",
-    "private": true,
-    "scripts": {
-        "test": "nargo test",
-        "version:release": "changelogithub",
-        "format:prettier": "prettier -c .",
-        "format:prettier:write": "prettier -w .",
-        "postinstall": "husky && git config --local core.editor cat"
-    },
-    "keywords": [
-        "zk-kit",
-        "noir",
-        "monorepo",
-        "zero-knowledge",
-        "zk-snarks"
-    ],
-    "workspaces": [
-        "packages/*"
-    ],
-    "packageManager": "yarn@4.2.1",
-    "devDependencies": {
-        "@commitlint/cli": "^18.6.1",
-        "@commitlint/config-conventional": "^18.6.2",
-        "changelogithub": "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch",
-        "czg": "^1.9.1",
-        "husky": "^9.0.11",
-        "lint-staged": "^15.2.2",
-        "prettier": "^3.3.2"
-    }
+  "name": "zk-kit.noir",
+  "description": "A monorepo of reusable Noir circuits.",
+  "license": "MIT",
+  "repository": "git@github.com:privacy-scaling-explorations/zk-kit.noir.git",
+  "homepage": "https://github.com/privacy-scaling-explorations/zk-kit.noir",
+  "bugs": "https://github.com/privacy-scaling-explorations/zk-kit.noir/issues",
+  "private": true,
+  "scripts": {
+    "check": "dprint check",
+    "fmt": "dprint fmt",
+    "postinstall": "husky && git config --local core.editor cat",
+    "test": "nargo test",
+    "version:release": "changelogithub"
+  },
+  "keywords": [
+    "zk-kit",
+    "noir",
+    "monorepo",
+    "zero-knowledge",
+    "zk-snarks"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "yarn@4.2.1",
+  "devDependencies": {
+    "@commitlint/cli": "^18.6.1",
+    "@commitlint/config-conventional": "^18.6.2",
+    "changelogithub": "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch",
+    "czg": "^1.9.1",
+    "dprint": "^0.46.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  }
 }

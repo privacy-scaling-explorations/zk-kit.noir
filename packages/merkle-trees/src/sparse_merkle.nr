@@ -1,7 +1,7 @@
-use crate::{Creator, MembershipProver, NonMembershipProver, Modifier};
+use crate::{Creator, MembershipProver, Modifier, NonMembershipProver};
 
-mod tree;
 mod tests;
+mod tree;
 
 struct SparseMerkleTree {
     root: Field,
@@ -27,9 +27,13 @@ impl MembershipProver<(Field, Field), [Field]> for SparseMerkleTree {
 }
 
 impl NonMembershipProver for SparseMerkleTree {
-    fn non_membership(self, entry: (Field, Field), matching_entry: (Field, Field), siblings: [Field]) {
+    fn non_membership(
+        self,
+        entry: (Field, Field),
+        matching_entry: (Field, Field),
+        siblings: [Field],
+    ) {
         if (self.root != 0) {
-
             // non-membership proof: the root is calculated based on the matching_entry, the siblings
             // and the path that is determined by the key of entry. This makes sure that matching_entry is in fact
             // a matching entry for entry meaning that it shares the same first bits as path
