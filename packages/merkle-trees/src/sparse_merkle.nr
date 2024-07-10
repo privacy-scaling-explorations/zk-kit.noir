@@ -1,16 +1,25 @@
-use crate::{Creator, MembershipProver, Modifier, NonMembershipProver};
+use crate::{MembershipProver, Modifier, NonMembershipProver, SMT_Creator};
 
 mod tests;
 mod tree;
 
 struct SparseMerkleTree {
     root: Field,
-    hasher: fn([Field]) -> Field,
+    leaf_hasher: fn([Field; 3]) -> Field,
+    hasher: fn([Field; 2]) -> Field,
 }
 
-impl Creator for SparseMerkleTree {
-    fn default(root: Field, hasher: fn([Field]) -> Field) -> Self {
-        Self { root, hasher }
+impl SMT_Creator for SparseMerkleTree {
+    fn default(
+        root: Field,
+        leaf_hasher: fn([Field; 3]) -> Field,
+        hasher: fn([Field; 2]) -> Field,
+    ) -> Self {
+        Self {
+            root,
+            leaf_hasher,
+            hasher,
+        }
     }
 }
 
@@ -50,7 +59,7 @@ impl Modifier<(Field, Field), [Field]> for SparseMerkleTree {
         // otherwise the correctness of the old root is validated based on the siblings after which
         // the new root is calculated and returned
         if (self.root == 0) {
-            self.root = (self.hasher)(&[new_entry.0, new_entry.1, 1]);
+            self.root = (self.leaf_hasher)([new_entry.0, new_entry.1, 1]);
         } else {
             let (old, new) = self.calculate_two_roots(new_entry, (new_entry.0, siblings));
             assert(old == self.root);
@@ -72,9 +81,9 @@ impl Modifier<(Field, Field), [Field]> for SparseMerkleTree {
         let path = key.to_be_bits(siblings.len() as u32);
 
         // old_parent is a container to temporarily store the nodes that ultimately lead to the OLD root
-        let mut old_parent: Field = (self.hasher)(&[key, old_value, 1]);
+        let mut old_parent: Field = (self.leaf_hasher)([key, old_value, 1]);
         // new_parent is a container to temporarily store the nodes that ultimately lead to the NEW root
-        let mut new_parent: Field = (self.hasher)(&[key, new_value, 1]);
+        let mut new_parent: Field = (self.leaf_hasher)([key, new_value, 1]);
         // starting from the bottom of the tree, for each level it checks whether there is a sibling and if
         // that is the case, it hashes the two containers with the sibling and updates the containers with the
         // resulting hashes until the uppermost level is reached aka the root node
@@ -82,11 +91,11 @@ impl Modifier<(Field, Field), [Field]> for SparseMerkleTree {
             let sibling = siblings[i];
             if sibling != 0 {
                 if path[i] == 0 {
-                    new_parent = (self.hasher)(&[new_parent, sibling]);
-                    old_parent = (self.hasher)(&[old_parent, sibling]);
+                    new_parent = (self.hasher)([new_parent, sibling]);
+                    old_parent = (self.hasher)([old_parent, sibling]);
                 } else {
-                    new_parent = (self.hasher)(&[sibling, new_parent]);
-                    old_parent = (self.hasher)(&[sibling, old_parent]);
+                    new_parent = (self.hasher)([sibling, new_parent]);
+                    old_parent = (self.hasher)([sibling, old_parent]);
                 }
             }
         }

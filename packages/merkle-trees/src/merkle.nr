@@ -1,15 +1,15 @@
-use crate::{Creator, MembershipProver, Modifier, NonMembershipProver};
+use crate::{MT_Creator, MembershipProver, Modifier, NonMembershipProver};
 
 mod tests;
 mod tree;
 
 struct MerkleTree {
-    hasher: fn([Field]) -> Field,
+    hasher: fn([Field; 2]) -> Field,
     root: Field,
 }
 
-impl Creator for MerkleTree {
-    fn default(root: Field, hasher: fn([Field]) -> Field) -> Self {
+impl MT_Creator for MerkleTree {
+    fn default(root: Field, hasher: fn([Field; 2]) -> Field) -> Self {
         Self { root, hasher }
     }
 }
@@ -45,11 +45,11 @@ impl Modifier<Field, HashPath> for MerkleTree {
             let sibling = siblings.1[i];
             if sibling != 0 {
                 if index_bits[i] == 0 {
-                    new_parent = (self.hasher)(&[new_parent, sibling]);
-                    old_parent = (self.hasher)(&[old_parent, sibling]);
+                    new_parent = (self.hasher)([new_parent, sibling]);
+                    old_parent = (self.hasher)([old_parent, sibling]);
                 } else {
-                    new_parent = (self.hasher)(&[sibling, new_parent]);
-                    old_parent = (self.hasher)(&[sibling, old_parent]);
+                    new_parent = (self.hasher)([sibling, new_parent]);
+                    old_parent = (self.hasher)([sibling, old_parent]);
                 }
             }
         }

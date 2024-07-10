@@ -1,6 +1,6 @@
 use crate::sparse_merkle::SparseMerkleTree;
 use crate::Calculator;
-use dep::std::hash::pedersen_hash_slice;
+use dep::std::hash::pedersen_hash;
 
 impl Calculator<(Field, Field)> for SparseMerkleTree {
     /*
@@ -14,7 +14,7 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
         let index_bits = siblings.0.to_be_bits(siblings.1.len() as u32);
 
         // serves as container for hashes and is initialized to be the leaf node
-        let mut node = (self.hasher)(&[entry.0, entry.1, 1]);
+        let mut node = (self.leaf_hasher)([entry.0, entry.1, 1]);
         // iterates over the list of siblings until the first sibling is found
         // arbitrarily assigns the sibling to be the left and the node to be the
         // right element of the hashing pair unless the path indicates the opposite
@@ -29,7 +29,7 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
                     left = node;
                     right = sibling;
                 }
-                node = (self.hasher)(&[left, right]);
+                node = (self.hasher)([left, right]);
             }
         }
         node
@@ -53,7 +53,7 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
 
         // root_with_leaf is a container for hashes to derive the root node for the tree that
         // includes the entry
-        let mut root_with_leaf = (self.hasher)(&[entry.0, entry.1, 1]);
+        let mut root_with_leaf = (self.leaf_hasher)([entry.0, entry.1, 1]);
         // root_without_leaf is a container for hashes to derive the root node for the tree that
         // doesn't include the entry
         let mut root_without_leaf: Field = 0;
@@ -70,14 +70,14 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
                     root_without_leaf = siblings.1[i];
                 }
                 if index_bits[i] == 0 {
-                    root_with_leaf = (self.hasher)(&[root_with_leaf, sibling]);
+                    root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
                     if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)(&[root_without_leaf, sibling]);
+                        root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
                     }
                 } else {
-                    root_with_leaf = (self.hasher)(&[sibling, root_with_leaf]);
+                    root_with_leaf = (self.hasher)([sibling, root_with_leaf]);
                     if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)(&[sibling, root_without_leaf]);
+                        root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
                     }
                 }
             }
@@ -91,7 +91,7 @@ fn test_hash_leaf_node() {
     let key = 20438969296305830531522370305156029982566273432331621236661483041446048135547;
     let value = 17150136040889237739751319962368206600863150289695545292530539263327413090784;
     assert(
-        pedersen_hash_slice(&[key, value, 1])
+        pedersen_hash([key, value, 1])
             == 0x055b34560562b842e236f919e9a74ee345d7523d70f711e0ccdb22466c767c20,
     );
 }
@@ -101,7 +101,7 @@ fn test_hash_node() {
     let left = 7374494214024125590767526270082639043919066776944047470878693145844636921798;
     let right = 3315292394704439116482935361251007857050519763420264982454883186141315324846;
     assert(
-        pedersen_hash_slice(&[left, right])
+        pedersen_hash([left, right])
             == 0x05f8a24a037ad8567c042c14c5a8299649e0fe13df1cec40d381a3671bae9245,
     );
 }

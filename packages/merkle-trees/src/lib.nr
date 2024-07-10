@@ -7,15 +7,44 @@ trait Calculator<T> {
     fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
 }
 
-trait Creator {
-    fn default(root: Field, hasher: fn([Field]) -> Field) -> Self;
+trait SMT_Creator {
+    fn default(
+        root: Field,
+        leaf_hasher: fn([Field; 3]) -> Field,
+        hasher: fn([Field; 2]) -> Field,
+    ) -> Self;
 
     /**
      * Imports an existing Sparse Merkle Tree (SparseMerkleTree) instance.
      * @param hasher The hash function that is used to hash the nodes of the tree
      * @param root The root of the tree
      */
-    fn from(root: Field, hasher: fn([Field]) -> Field) -> Self {
+    fn from(
+        root: Field,
+        leaf_hasher: fn([Field; 3]) -> Field,
+        hasher: fn([Field; 2]) -> Field,
+    ) -> Self {
+        Self::default(root, leaf_hasher, hasher)
+    }
+
+    /**
+     * Creates a new Sparse Merkle Tree (SparseMerkleTree) instance.
+     * @param hasher The hash function that is used to hash the nodes of the tree
+     */
+    fn new(leaf_hasher: fn([Field; 3]) -> Field, hasher: fn([Field; 2]) -> Field) -> Self {
+        Self::from(0, leaf_hasher, hasher)
+    }
+}
+
+trait MT_Creator {
+    fn default(root: Field, hasher: fn([Field; 2]) -> Field) -> Self;
+
+    /**
+     * Imports an existing Sparse Merkle Tree (SparseMerkleTree) instance.
+     * @param hasher The hash function that is used to hash the nodes of the tree
+     * @param root The root of the tree
+     */
+    fn from(root: Field, hasher: fn([Field; 2]) -> Field) -> Self {
         Self::default(root, hasher)
     }
 
@@ -23,7 +52,7 @@ trait Creator {
      * Creates a new Sparse Merkle Tree (SparseMerkleTree) instance.
      * @param hasher The hash function that is used to hash the nodes of the tree
      */
-    fn new(hasher: fn([Field]) -> Field) -> Self {
+    fn new(hasher: fn([Field; 2]) -> Field) -> Self {
         Self::from(0, hasher)
     }
 }
