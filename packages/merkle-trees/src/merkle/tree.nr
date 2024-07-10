@@ -24,7 +24,7 @@ impl Calculator<Field> for MerkleTree {
                     left = node;
                     right = sibling;
                 }
-                node = (self.hasher)(&[left, right]);
+                node = (self.hasher)([left, right]);
             }
         }
         node
@@ -54,15 +54,15 @@ impl Calculator<Field> for MerkleTree {
                 }
 
                 if (index_bits[i] == 0) {
-                    root_with_leaf = (self.hasher)(&[root_with_leaf, sibling]);
+                    root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
 
                     if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)(&[root_without_leaf, sibling]);
+                        root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
                     }
                 } else {
-                    root_with_leaf = (self.hasher)(&[sibling, root_with_leaf]);
+                    root_with_leaf = (self.hasher)([sibling, root_with_leaf]);
                     if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)(&[sibling, root_without_leaf]);
+                        root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
                     }
                 };
             }

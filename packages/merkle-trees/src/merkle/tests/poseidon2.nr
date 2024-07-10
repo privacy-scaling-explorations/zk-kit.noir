@@ -1,12 +1,8 @@
 use crate::merkle::MerkleTree;
 use dep::std::hash::poseidon2::Poseidon2::hash;
 
-fn poseidon2_hasher(leaves: [Field]) -> Field {
-    if leaves.len() == 2 {
-        hash([leaves[0], leaves[1]], 2)
-    } else {
-        hash([leaves[0], leaves[1], leaves[2]], 3)
-    }
+fn poseidon2_hasher(leaves: [Field; 2]) -> Field {
+    hash([leaves[0], leaves[1]], 2)
 }
 
 #[test]
@@ -72,7 +68,7 @@ fn test_merkle_tree_update() {
 
     assert(
         mt.root
-            == poseidon2_hasher(&[
+            == poseidon2_hasher([
                 0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1,
                 0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e,
             ]),

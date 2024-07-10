@@ -1,8 +1,8 @@
 use crate::merkle::MerkleTree;
-use dep::std::hash::pedersen::pedersen_hash_slice;
+use dep::std::hash::pedersen_hash;
 
-fn pedersen_hasher(leaves: [Field]) -> Field {
-    pedersen_hash_slice(leaves)
+fn pedersen_hasher(leaves: [Field; 2]) -> Field {
+    pedersen_hash(leaves)
 }
 
 #[test]
@@ -67,7 +67,7 @@ fn test_merkle_tree_update() {
 
     assert(
         mt.root
-            == pedersen_hasher(&[
+            == pedersen_hasher([
                 0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1,
                 0x1c59022dba1d97f63021cc5a23e4fe80f019465e0ccb54de9aa91935495354a3,
             ]),

@@ -2,4 +2,4 @@
 name = "merkle_trees"
 type = "lib"
 authors = ["fabianschu", "signorecello"]
-compiler_version = "0.26.0"
+compiler_version = "0.30.0"
