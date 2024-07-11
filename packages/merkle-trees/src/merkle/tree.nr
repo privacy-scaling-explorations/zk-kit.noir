@@ -40,7 +40,8 @@ impl Calculator<Field> for MerkleTree {
      * @returns Two root nodes: the first one doesn't include entry, the second does
      */
     fn calculate_two_roots(self, leaf: Field, siblings: [Field]) -> (Field, Field) {
-        let index_bits = siblings[0].to_le_bits(siblings.len() as u32);
+        let bit_size : u32 = siblings.len() as u32;
+        let index_bits = siblings[0].to_le_bits(bit_size);
 
         let mut root_with_leaf = leaf;
         let mut root_without_leaf = 0;
