@@ -10,8 +10,8 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
      * @param path The position of the entry in the tree as represented by bits from bottom to top
      * @returns The calculated root node
      */
-    fn calculate_root(self, entry: (Field, Field), siblings: (Field, [Field])) -> Field {
-        let index_bits = siblings.0.to_be_bits(siblings.1.len() as u32);
+    fn calculate_root(self, entry: (Field, Field), siblings: ([Field])) -> Field {
+        let index_bits = siblings[0].to_be_bits(siblings.len() as u32);
 
         // serves as container for hashes and is initialized to be the leaf node
         let mut node = (self.leaf_hasher)([entry.0, entry.1, 1]);
@@ -20,8 +20,8 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
         // right element of the hashing pair unless the path indicates the opposite
         // order in which case the order is changed. The new hash is stored in the container
         // until the root node is reached and returned.
-        for i in 0..siblings.1.len() {
-            let sibling = siblings.1[i];
+        for i in 1..siblings.len() {
+            let sibling = siblings[i];
             if sibling != 0 {
                 let mut left = sibling;
                 let mut right = node;
@@ -44,12 +44,8 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
      * @param siblings Contains the siblings from bottom to top
      * @returns Two root nodes: the first one doesn't include entry, the second does
      */
-    fn calculate_two_roots(
-        self,
-        entry: (Field, Field),
-        siblings: (Field, [Field]),
-    ) -> (Field, Field) {
-        let index_bits = siblings.0.to_be_bits(siblings.1.len() as u32);
+    fn calculate_two_roots(self, entry: (Field, Field), siblings: ([Field])) -> (Field, Field) {
+        let index_bits = siblings[0].to_be_bits(siblings.len() as u32);
 
         // root_with_leaf is a container for hashes to derive the root node for the tree that
         // includes the entry
@@ -58,16 +54,16 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
         // doesn't include the entry
         let mut root_without_leaf: Field = 0;
         // iterate over the levels of the tree from bottom to top
-        for i in 0..siblings.1.len() {
-            let sibling = siblings.1[i];
+        for i in 1..siblings.len() {
+            let sibling = siblings[i];
             // After the first sibling is found, the processes are started to calculate the two root nodes.
             // The calulcation of the root node that includes the entry is comparable to `calculate_root`.
             // To calc the root node that doesn't include entry, the first sibling is put into the container
             // and starting from each SUBSEQUENT iteration it is hashed with its sibling and the resulting hash
             // again stored in the container until the root is reached
             if sibling != 0 {
-                if siblings.1[i - 1] == 0 {
-                    root_without_leaf = siblings.1[i];
+                if siblings[i - 1] == 0 {
+                    root_without_leaf = siblings[i];
                 }
                 if index_bits[i] == 0 {
                     root_with_leaf = (self.hasher)([root_with_leaf, sibling]);

@@ -3,8 +3,12 @@ mod merkle;
 mod sparse_merkle;
 
 trait Calculator<T> {
-    fn calculate_root(self, entry: T, siblings: (Field, [Field])) -> Field;
-    fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
+    fn calculate_root(self, entry: T, siblings: ([Field])) -> Field;
+    fn calculate_two_roots(self, entry: T, siblings: ([Field])) -> (Field, Field);
+}
+
+trait Hasher {
+    fn hash<N>(arr: [Field; N]) -> Field;
 }
 
 trait SMT_Creator {

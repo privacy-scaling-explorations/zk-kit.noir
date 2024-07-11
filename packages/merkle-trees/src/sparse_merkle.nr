@@ -29,7 +29,7 @@ impl MembershipProver<(Field, Field), [Field]> for SparseMerkleTree {
 
         // membership proof: the root is calculated based on the entry, the siblings,
         // and the path determined by the key of entry through consecutive hashing
-        calculated_root = self.calculate_root(entry, (entry.0, siblings));
+        calculated_root = self.calculate_root(entry, siblings.push_front(entry.0));
 
         assert(calculated_root == self.root);
     }
@@ -46,7 +46,8 @@ impl NonMembershipProver for SparseMerkleTree {
             // non-membership proof: the root is calculated based on the matching_entry, the siblings
             // and the path that is determined by the key of entry. This makes sure that matching_entry is in fact
             // a matching entry for entry meaning that it shares the same first bits as path
-            let mut calculated_root = self.calculate_root(matching_entry, (entry.0, siblings));
+            let mut calculated_root =
+                self.calculate_root(matching_entry, siblings.push_front(entry.0));
             assert(calculated_root == self.root);
         }
     }
@@ -61,7 +62,7 @@ impl Modifier<(Field, Field), [Field]> for SparseMerkleTree {
         if (self.root == 0) {
             self.root = (self.leaf_hasher)([new_entry.0, new_entry.1, 1]);
         } else {
-            let (old, new) = self.calculate_two_roots(new_entry, (new_entry.0, siblings));
+            let (old, new) = self.calculate_two_roots(new_entry, siblings.push_front(new_entry.0));
             assert(old == self.root);
             self.root = new;
         }
@@ -69,7 +70,7 @@ impl Modifier<(Field, Field), [Field]> for SparseMerkleTree {
 
     fn delete(&mut self, entry: (Field, Field), siblings: [Field]) {
         // proves membership of entry in the old root, then calculates and returns the new root
-        let (new, old) = self.calculate_two_roots(entry, (entry.0, siblings));
+        let (new, old) = self.calculate_two_roots(entry, siblings.push_front(entry.0));
         assert(old == self.root);
         self.root = new;
     }

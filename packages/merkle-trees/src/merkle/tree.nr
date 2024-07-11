@@ -12,11 +12,11 @@ pub fn key_to_path(key: Field, length: u32) -> [u1] {
 }
 
 impl Calculator<Field> for MerkleTree {
-    fn calculate_root(self, leaf: Field, siblings: (Field, [Field])) -> Field {
-        let index_bits = siblings.0.to_le_bits(siblings.1.len() as u32);
+    fn calculate_root(self, leaf: Field, siblings: ([Field])) -> Field {
+        let index_bits = siblings[0].to_le_bits(siblings.len() as u32);
         let mut node = leaf;
-        for i in 0..siblings.1.len() {
-            let sibling = siblings.1[i];
+        for i in 1..siblings.len() {
+            let sibling = siblings[i];
             if sibling != 0 {
                 let mut left = sibling;
                 let mut right = node;
@@ -39,18 +39,18 @@ impl Calculator<Field> for MerkleTree {
      * @param siblings Contains the siblings from bottom to top
      * @returns Two root nodes: the first one doesn't include entry, the second does
      */
-    fn calculate_two_roots(self, leaf: Field, siblings: (Field, [Field])) -> (Field, Field) {
-        let index_bits = siblings.0.to_le_bits(siblings.1.len() as u32);
+    fn calculate_two_roots(self, leaf: Field, siblings: [Field]) -> (Field, Field) {
+        let index_bits = siblings[0].to_le_bits(siblings.len() as u32);
 
         let mut root_with_leaf = leaf;
         let mut root_without_leaf = 0;
 
-        for i in 0..siblings.1.len() {
-            let sibling = siblings.1[i];
+        for i in 1..siblings.len() {
+            let sibling = siblings[i];
 
             if (sibling != 0) {
-                if i == siblings.1.len() - 1 {
-                    root_without_leaf = siblings.1[i];
+                if i == siblings.len() - 1 {
+                    root_without_leaf = siblings[i];
                 }
 
                 if (index_bits[i] == 0) {

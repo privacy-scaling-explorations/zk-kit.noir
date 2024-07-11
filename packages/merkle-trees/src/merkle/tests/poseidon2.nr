@@ -11,14 +11,12 @@ fn test_merkle_tree_membership() {
     let mt = MerkleTree::from(root, poseidon2_hasher);
 
     let leaf = 0x00;
-    let paths = (
+    let paths = &[
         0x00,
-        &[
-            0x01,
-            0x2bc00d90b885b09d12764e764410f7f693f514f7f3ca14d916741ff3968b3079,
-            0x04,
-        ],
-    );
+        0x01,
+        0x2bc00d90b885b09d12764e764410f7f693f514f7f3ca14d916741ff3968b3079,
+        0x04,
+    ];
 
     mt.membership(leaf, paths);
 }
@@ -29,10 +27,10 @@ fn test_merkle_tree_add() {
     let mut mt = MerkleTree::from(old_root, poseidon2_hasher);
 
     let leaf = 0x2bc00d90b885b09d12764e764410f7f693f514f7f3ca14d916741ff3968b3079;
-    let paths = (
-        0x01,
-        &[0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e],
-    );
+    let paths = &[
+        0x00,
+        0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e,
+    ];
     mt.add(leaf, paths);
 }
 
@@ -42,10 +40,10 @@ fn test_merkle_tree_delete() {
     let mut mt = MerkleTree::from(old_root, poseidon2_hasher);
 
     let leaf = 0x2bc00d90b885b09d12764e764410f7f693f514f7f3ca14d916741ff3968b3079;
-    let paths = (
+    let paths = &[
         0x00,
-        &[0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e],
-    );
+        0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e,
+    ];
 
     mt.delete(leaf, paths);
 
@@ -60,10 +58,11 @@ fn test_merkle_tree_update() {
     let old_leaf = 0x2bc00d90b885b09d12764e764410f7f693f514f7f3ca14d916741ff3968b3079;
     let leaf = 0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1;
 
-    let paths = (
+    let paths = &[
         0x00,
-        &[0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e],
-    );
+        0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e,
+    ];
+
     mt.update(leaf, old_leaf, paths);
 
     assert(
