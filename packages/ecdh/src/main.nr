@@ -22,13 +22,8 @@ fn generate_public_key(private_key: Field, base_point: Point) -> Point {
     baby_jubjub_curve.mul(private_key, base_point)
 }
 
-struct SharedKeys {
-    shared_key1: Point,
-    shared_key2: Point,
-}
-
 // ECDH Circuit
-fn main(private_key1: [u8; 32], private_key2: [u8; 32]) -> SharedKeys {
+fn main(private_key1: [u8; 32], private_key2: [u8; 32]) {
     let base_point = Point::new(
         5299619240641551281634865583518297030282874472190772894086521144482721001553,
         16950150798460657717958625567821834550301663161624707787222815936182638968203,
@@ -41,9 +36,6 @@ fn main(private_key1: [u8; 32], private_key2: [u8; 32]) -> SharedKeys {
     let shared_key1 = generate_public_key(private_key4, public_key1);
     let shared_key2 = generate_public_key(private_key3, public_key2);
     assert(shared_key1 == shared_key2);
-    SharedKeys {
-        shared_key1,
-        shared_key2,
-    }
 }
 
+// Add Individual Function Tests Here
