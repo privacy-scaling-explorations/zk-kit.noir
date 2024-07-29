@@ -1,4 +1,5 @@
 mod globals;
+mod incremental_merkle;
 mod merkle;
 mod sparse_merkle;
 

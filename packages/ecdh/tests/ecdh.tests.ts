@@ -21,7 +21,7 @@ describe("ECDH Circuit Tests", function() {
         const circuitFile = readFileSync(resolve('../target/ecdh.json'), 'utf-8');
         const circuit = JSON.parse(circuitFile);
         const backend = new BarretenbergBackend(circuit);
-        const noir = new Noir(backend);
+        const noir = new Noir(circuit);
         let pk1 = generatePrivateKey();
         let pk2 = generatePrivateKey();
         const input = { private_key1: pk1, private_key2: pk2};
