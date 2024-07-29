@@ -4,7 +4,7 @@ import { Noir } from '@noir-lang/noir_js';
 import { ProofData } from '@noir-lang/types';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import circuit from '../target/circuit.json';
+// import circuit from '../target/circuit.json';
 import 'mocha';
 // import shelljs from 'shelljs';
 
@@ -17,8 +17,8 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
   let correctProof: ProofData;
 
   beforeEach(async () => {
-    // const circuitFile = readFileSync(resolve(circuit), 'utf-8');
-    // const circuit_file = JSON.parse(circuitFile);
+    const circuitFile = readFileSync(resolve(__dirname, '../target/circuit.json'), 'utf-8');
+    const circuit = JSON.parse(circuitFile);
     const backend = new BarretenbergBackend(circuit);
     noir = new Noir(circuit, backend);
   });
