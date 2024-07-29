@@ -6,6 +6,7 @@ import { compile } from '@noir-lang/noir_wasm';
 import { Noir } from '@noir-lang/noir_js';
 import { ProofData } from '@noir-lang/types';
 import { expect } from 'chai';
+import 'mocha';
 
 // RUN: npx ts-node tests/ecdh.tests.ts
 // This will not run with yarn tests
@@ -16,15 +17,23 @@ function generatePrivateKey(): Uint8Array {
 }
   
 describe("ECDH Circuit Tests", function() {
+    let noir: Noir;
     let correctProof: ProofData;
-    it('Should generate valid proof for correct input', async () => {
+    beforeEach(async () => {
         const circuitFile = readFileSync(resolve('../target/ecdh.json'), 'utf-8');
         const circuit = JSON.parse(circuitFile);
         const backend = new BarretenbergBackend(circuit);
-        const noir = new Noir(backend);
+        noir = new Noir(circuit, backend);   
+    });
+    it('Should generate valid proof for correct input', async () => {
+       
         let pk1 = generatePrivateKey();
         let pk2 = generatePrivateKey();
-        const input = { private_key1: pk1, private_key2: pk2};
+        const input = {
+            private_key1: Array.from(pk1),
+            private_key2: Array.from(pk2)
+        };
+
         // Generate proof
         correctProof = await noir.generateProof(input);
         expect(correctProof.proof).to.be.true;
