@@ -4,11 +4,7 @@ import { Noir } from '@noir-lang/noir_js';
 import { ProofData } from '@noir-lang/types';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-// import circuit from '../target/circuit.json';
 import 'mocha';
-// import shelljs from 'shelljs';
-
-// shelljs.exec('npx hardhat compile');
 
 // npx mocha -r ts-node/register tests/main.ts 
 
@@ -29,7 +25,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     correctProof = await noir.generateProof(input);
     expect(correctProof.proof instanceof Uint8Array).to.be.true;
   });
-
+});
 //   it('Should verify valid proof for correct input', async () => {
 //     const verification = await noir.verifyProof(correctProof);
 //     expect(verification).to.be.true;
@@ -46,4 +42,3 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
 //       expect(error.message).to.contain('Cannot satisfy constraint');
 //     }
 //   });
-});

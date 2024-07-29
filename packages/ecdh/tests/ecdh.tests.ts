@@ -20,8 +20,8 @@ function generatePrivateKey(): Uint8Array {
 describe("ECDH Circuit Tests", function() {
     let correctProof;
     it('Should generate valid proof for correct input', async () => {
-        // const circuitFile = readFileSync(resolve('../target/ecdh.json'), 'utf-8');
-        const circuit = JSON.parse(circuit_ecdh);
+        const circuitFile = readFileSync(resolve(__dirname, '../target/ecdh.json'), 'utf-8');
+        const circuit = JSON.parse(circuitFile);
         const backend = new BarretenbergBackend(circuit);
         const noir = new Noir(circuit, backend);
         let pk1 = generatePrivateKey();

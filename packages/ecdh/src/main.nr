@@ -1,8 +1,15 @@
 use dep::std::ec::tecurve::affine::{Curve, Point};
 
+/// Converts a byte array to a field element.
+/// # Arguments
+/// * `bytes` - A fixed-size array of 32 bytes.
+/// * `big_endian` - A boolean indicating if the byte array is in big-endian format.
+/// # Returns
+/// A `Field` element representing the converted byte array.
 pub fn field_from_bytes(bytes: [u8; 32], big_endian: bool) -> Field {
     let mut as_field: Field = 0;
-    let mut offset = 1;
+    let mut offset: Field = 1;
+
     for i in 0..32 {
         let index = if big_endian { 31 - i } else { i };
         as_field += (bytes[index] as Field) * offset;
@@ -11,6 +18,7 @@ pub fn field_from_bytes(bytes: [u8; 32], big_endian: bool) -> Field {
 
     as_field
 }
+
 /// Generates a public key from a private key using the Baby JubJub curve.
 /// # Arguments
 /// * `private_key` - A field element representing the private key.
@@ -39,3 +47,22 @@ fn main(private_key1: [u8; 32], private_key2: [u8; 32]) {
 }
 
 // Add Individual Function Tests Here
+// Test -> Generate Public Key
+// #[test]
+// // fn public_multiply_correct() {
+// //     let base_point = Point::new(
+// //         5299619240641551281634865583518297030282874472190772894086521144482721001553,
+// //         16950150798460657717958625567821834550301663161624707787222815936182638968203,
+// //     );
+// //     let result = generate_public_key(2, base_point);
+// //     assert(result == );
+
+// // }
+
+// Test -> Field from Bytes
+// #[test]
+// fn field_from_bytes_correct() {
+//     let bytes = [0u8; 32];
+//     let result = field_from_bytes(bytes, true);
+//     assert(result == 0);
+// }
