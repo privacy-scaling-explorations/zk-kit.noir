@@ -7,7 +7,8 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["mocha", "node", "chai"]
+    "resolveJsonModule": true, // Add this line
+    "types": ["mocha", "node"]
   },
   "include": [
     "./src/**/*.ts",
