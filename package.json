@@ -38,8 +38,8 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@noir-lang/backend_barretenberg": "^0.27.0",
-    "@noir-lang/noir_js": "^0.27.0",
+    "@noir-lang/backend_barretenberg": "^0.30.0",
+    "@noir-lang/noir_js": "^0.30.0",
     "@noir-lang/noir_wasm": "^0.32.0",
     "chai": "^4.5.0",
     "mocha": "^10.7.0"
