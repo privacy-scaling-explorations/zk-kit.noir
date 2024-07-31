@@ -7,7 +7,10 @@ trait Calculator<T> {
     fn calculate_root(self, entry: T, siblings: (Field, [Field])) -> Field;
     fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
 }
-
+trait DynamicCalculator<T> {
+    fn calculate_root_dynamic(self, max_depth: u32; entry: T, siblings: (Field, [Field])) -> Field;
+    // fn calculate_two_roots_dynamic(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
+}
 trait SMT_Creator {
     fn default(
         root: Field,
