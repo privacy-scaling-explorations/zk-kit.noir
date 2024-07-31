@@ -1,4 +1,4 @@
-use crate::{MT_Creator, MembershipProver, Modifier, NonMembershipProver};
+use crate::{IMT_Creator, MembershipProver, Modifier, NonMembershipProver};
 
 mod tests;
 mod tree;
@@ -8,7 +8,7 @@ struct IncrementalMerkle {
     root: Field,
 }
 
-impl MT_Creator for IncrementalMerkle {
+impl IMT_Creator for IncrementalMerkle {
     fn default(root: Field, hasher: fn([Field; 2]) -> Field) -> Self {
         Self { root, hasher }
     }
