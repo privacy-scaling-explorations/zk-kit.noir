@@ -41,36 +41,31 @@ impl DynamicCalculator<Field> for IncrementalMerkle {
         leaf: Field,
         siblings: (Field, [Field]),
     ) -> (Field, Field) {
-        let index_bits = siblings.0.to_le_bits(max_depth);
+    
+         let index_bits = siblings.0.to_le_bits(max_depth);
 
         let mut root_with_leaf = leaf;
-        let mut root_without_leaf = Field::zero(); // Assuming Field::zero() creates a zero value.
+        let mut root_without_leaf = 0;
 
-        for i in 0..siblings.1.len() {
+        for i in 0..max_depth {
             let sibling = siblings.1[i];
-
-            if sibling != Field::zero() {
-                // Handle root_without_leaf at the last sibling index
+            if (sibling != 0) {
                 if i == siblings.1.len() - 1 {
-                    root_without_leaf = sibling;
+                    root_without_leaf = siblings.1[i];
                 }
-
-                if index_bits[i] == 0 {
+                if (index_bits[i] == 0) {
                     root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
-
-                    if root_without_leaf != sibling {
+                    if (root_without_leaf != sibling) {
                         root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
                     }
                 } else {
                     root_with_leaf = (self.hasher)([sibling, root_with_leaf]);
-
-                    if root_without_leaf != sibling {
+                    if (root_without_leaf != sibling) {
                         root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
                     }
-                }
+                };
             }
         }
-
         (root_without_leaf, root_with_leaf)
     }
 }
