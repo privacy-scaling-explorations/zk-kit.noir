@@ -20,22 +20,18 @@ impl DynamicCalculator<Field> for IncrementalMerkle {
     ) -> Field {
         let index_bits = siblings.0.to_le_bits(max_depth);
         let mut node = leaf;
-
-        for i in 0..siblings.1.len() {
+        for i in 0..max_depth {
             let sibling = siblings.1[i];
             if sibling != 0 {
                 let mut left = sibling;
                 let mut right = node;
-
                 if index_bits[i] == 0 {
                     left = node;
                     right = sibling;
                 }
-
                 node = (self.hasher)([left, right]);
             }
         }
-
         node
     }
 
