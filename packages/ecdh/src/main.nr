@@ -1,5 +1,9 @@
 use dep::std::ec::tecurve::affine::{Curve, Point};
 
+
+// @@@@@@ Core ECDH Implementation 
+
+
 /// Converts a byte array to a field element.
 /// # Arguments
 /// * `bytes` - A fixed-size array of 32 bytes.
@@ -46,7 +50,8 @@ fn main(private_key1: [u8; 32], private_key2: [u8; 32]) {
     assert(shared_key1 == shared_key2);
 }
 
-// Add Individual Function Tests Here
+// @@@@@@ UNIT TESTS 
+
 // Test -> Generate Public Key
 // #[test]
 // // fn public_multiply_correct() {
@@ -59,10 +64,18 @@ fn main(private_key1: [u8; 32], private_key2: [u8; 32]) {
 
 // // }
 
-// Test -> Field from Bytes
-// #[test]
-// fn field_from_bytes_correct() {
-//     let bytes = [0u8; 32];
-//     let result = field_from_bytes(bytes, true);
-//     assert(result == 0);
-// }
+/// Test that the `field_from_bytes` function correctly converts a 32-byte array of zeroes to a field element with a value of `0`.
+///
+/// This test ensures that:
+/// - The input is a 32-byte array initialized with zeroes.
+/// - The `field_from_bytes` function is called with the input and a boolean flag set to `true`.
+/// - The output is asserted to be `0`, verifying that the conversion is correct.
+#[test]
+// Define the test function for `field_from_bytes`
+fn field_from_bytes_correct(){
+    let bytes: [u8; 32] = [0; 32];
+    let field_result = field_from_bytes(bytes, true);
+    assert_eq(field_result, 0);
+}
+
+
