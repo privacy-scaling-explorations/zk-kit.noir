@@ -1,7 +1,7 @@
 [package]
 name = "ecdh"
-type = "bin"
-authors = [""]
+type = "lib"
+authors = ["YashBit"]
 compiler_version = ">=0.27.0"
 
 [dependencies]
