@@ -1,4 +1,5 @@
 mod globals;
+mod incremental_merkle;
 mod merkle;
 mod sparse_merkle;
 
@@ -6,7 +7,15 @@ trait Calculator<T> {
     fn calculate_root(self, entry: T, siblings: (Field, [Field])) -> Field;
     fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
 }
-
+trait DynamicCalculator<T> {
+    fn calculate_root_dynamic(self, max_depth: u32, entry: T, siblings: (Field, [Field])) -> Field;
+    fn calculate_two_roots_dynamic(
+        self,
+        max_depth: u32,
+        entry: T,
+        siblings: (Field, [Field]),
+    ) -> (Field, Field);
+}
 trait SMT_Creator {
     fn default(
         root: Field,
@@ -50,6 +59,27 @@ trait MT_Creator {
 
     /**
      * Creates a new Sparse Merkle Tree (SparseMerkleTree) instance.
+     * @param hasher The hash function that is used to hash the nodes of the tree
+     */
+    fn new(hasher: fn([Field; 2]) -> Field) -> Self {
+        Self::from(0, hasher)
+    }
+}
+
+trait IMT_Creator {
+    fn default(root: Field, hasher: fn([Field; 2]) -> Field) -> Self;
+
+    /**
+     * Imports an existing Incremental Merkle Tree (IncrementalMerkleTree) instance.
+     * @param hasher The hash function that is used to hash the nodes of the tree
+     * @param root The root of the tree
+     */
+    fn from(root: Field, hasher: fn([Field; 2]) -> Field) -> Self {
+        Self::default(root, hasher)
+    }
+
+    /**
+     * Creates a new Incremental Merkle Tree (IncrementalMerkleTree) instance.
      * @param hasher The hash function that is used to hash the nodes of the tree
      */
     fn new(hasher: fn([Field; 2]) -> Field) -> Self {
