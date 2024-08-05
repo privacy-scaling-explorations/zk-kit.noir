@@ -1,8 +1,6 @@
 use dep::std::ec::tecurve::affine::{Curve, Point};
 
-
-// @@@@@@ Core ECDH Implementation 
-
+// @@@@@@ Core ECDH Implementation
 
 /// Converts a byte array to a field element.
 /// # Arguments
@@ -50,7 +48,7 @@ fn main(private_key1: [u8; 32], private_key2: [u8; 32]) {
     assert(shared_key1 == shared_key2);
 }
 
-// @@@@@@ UNIT TESTS 
+// @@@@@@ UNIT TESTS
 
 // Test -> Generate Public Key
 // #[test]
@@ -72,10 +70,8 @@ fn main(private_key1: [u8; 32], private_key2: [u8; 32]) {
 /// - The output is asserted to be `0`, verifying that the conversion is correct.
 #[test]
 // Define the test function for `field_from_bytes`
-fn field_from_bytes_correct(){
+fn field_from_bytes_correct() {
     let bytes: [u8; 32] = [0; 32];
     let field_result = field_from_bytes(bytes, true);
     assert_eq(field_result, 0);
 }
-
-
