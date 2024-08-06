@@ -35,13 +35,12 @@
     "husky": "4",
     "lint-staged": "^15.2.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
-  },
-  "dependencies": {
+    "typescript": "^5.5.4",
     "@noir-lang/backend_barretenberg": "^0.30.0",
     "@noir-lang/noir_js": "^0.30.0",
     "@noir-lang/noir_wasm": "^0.32.0",
     "chai": "^4.5.0",
     "mocha": "^10.7.0"
-  }
+  },
+  "dependencies": {}
 }
