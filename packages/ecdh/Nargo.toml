@@ -2,6 +2,4 @@
 name = "ecdh"
 type = "lib"
 authors = ["YashBit"]
-compiler_version = ">=0.27.0"
-
-[dependencies]
+compiler_version = ">=0.30.0"

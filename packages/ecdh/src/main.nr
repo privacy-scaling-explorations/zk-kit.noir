@@ -1,5 +1,10 @@
 use dep::std::ec::tecurve::affine::{Curve, Point};
-
+// use crate::scalar_field::ScalarField;
+// use crate::Curve;
+// use crate::TECurveParameterTrait;
+// use crate::bjj::BabyJubJubParams;
+// use std::ec::consts::te::baby_jubjub;
+// use std::ec::tecurve::affine::Point as TEPoint;
 // @@@@@@ Core ECDH Implementation
 
 /// Converts a byte array to a field element.
@@ -75,3 +80,15 @@ fn field_from_bytes_correct() {
     let field_result = field_from_bytes(bytes, true);
     assert_eq(field_result, 0);
 }
+
+// #[test]
+// fn test_sub() {
+//     let bjj = baby_jubjub();
+//     let bjj_point = bjj.base8;
+//     let point:  Curve<BabyJubJubParams> = Curve { x: bjj_point.x, y: bjj_point.y };
+
+//     let expected = point + (point + (point));
+//     let result = point.dbl().dbl().sub(point);
+//     assert(result.x == expected.x);
+//     assert(result.y == expected.y);
+// }
