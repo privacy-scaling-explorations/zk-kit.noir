@@ -1,5 +1,5 @@
 [package]
 name = "ecdh"
-type = "lib"
+type = "bin"
 authors = ["YashBit"]
 compiler_version = ">=0.30.0"
