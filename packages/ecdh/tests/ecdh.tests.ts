@@ -17,9 +17,9 @@ function generatePrivateKey(): Uint8Array {
 }
 
 describe('ECDH Circuit Tests', function() {
-  let noir: Noir
-  let backend: BarretenbergBackend
-  let correctProof: ProofData
+  let noir: Noir;
+  let backend: BarretenbergBackend;
+  let correctProof: ProofData;
   beforeEach(async () => {
     const circuitFile = readFileSync(resolve(__dirname, '../target/ecdh.json'), 'utf-8')
     const circuit = JSON.parse(circuitFile)
@@ -27,10 +27,9 @@ describe('ECDH Circuit Tests', function() {
     noir = new Noir(circuit, backend)
   })
   it('Should generate valid proof for correct input', async function() {
-    this.timeout(20000) // Optional: Increase timeout if needed
-
-    let pk1 = generatePrivateKey()
-    let pk2 = generatePrivateKey()
+    this.timeout(20000); // Optional: Increase timeout if needed
+    let pk1 = generatePrivateKey();
+    let pk2 = generatePrivateKey();
 
     // Convert Uint8Array to regular arrays
     const input = {
@@ -38,8 +37,6 @@ describe('ECDH Circuit Tests', function() {
       private_key2: Array.from(pk2),
     }
 
-    // Generate proof
-    let correctProof
     try {
       correctProof = await noir.generateProof(input)
       console.log('Proof generated:', correctProof)
@@ -51,35 +48,22 @@ describe('ECDH Circuit Tests', function() {
     // Assert that correctProof is defined and has the expected structure
     expect(correctProof).to.not.be.undefined
     expect(correctProof.proof instanceof Uint8Array).to.be.true
-  })
+   
+  });
+
+  it('Should verify valid proof for correct input', async function() {
+    this.timeout(20000); // Increase timeout to 60 seconds
+    console.log('Correct proof:', correctProof);
+    try {
+      const verification = await noir.verifyProof(correctProof);
+      console.log('Verification result:', verification);
+      expect(verification).to.be.true;
+    } catch (error) {
+      console.error('Error during proof verification:', error);
+      throw error; // Ensure errors are not swallowed
+    }
+  });
 })
 
-// describe("ECDH Circuit Tests", function() {
-//     let noir: Noir;
-//     let correctProof: ProofData;
-//     beforeEach(async () => {
-//         const circuitFile = readFileSync(resolve('../target/ecdh.json'), 'utf-8');
-//         const circuit = JSON.parse(circuitFile);
-//         const backend = new BarretenbergBackend(circuit);
-//         noir = new Noir(circuit, backend);
-//     });
-//     it('Should generate valid proof for correct input', async () => {
-
-//         let pk1 = generatePrivateKey();
-//         let pk2 = generatePrivateKey();
-//         const input = {
-//             private_key1: Array.from(pk1),
-//             private_key2: Array.from(pk2)
-//         };
-
-//         // Generate proof
-//         correctProof = await noir.generateProof(input);
-//         expect(correctProof.proof).to.be.true;
-//     });
-
-//     it('Should verify valid proof for correct input', async () => {
-//         const verification = await noir.verifyProof(correctProof);
-//         expect(verification).to.be.true;
-//     });
-
-// });
+  
+   

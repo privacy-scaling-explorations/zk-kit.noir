@@ -28,6 +28,11 @@ pub fn field_from_bytes(bytes: [u8; 32], big_endian: bool) -> Field {
 }
 
 
+/// Computes a public key from a private key using the Baby JubJub curve.
+/// # Arguments
+/// * `private_key` - The private key as a `Field` element.
+/// # Returns
+/// The corresponding `Point` on the Baby JubJub curve.
 fn derive_public_key(private_key: Field) -> Point {
     let base_point = Point::new(
         5299619240641551281634865583518297030282874472190772894086521144482721001553,
@@ -37,18 +42,23 @@ fn derive_public_key(private_key: Field) -> Point {
     baby_jubjub_curve.mul(private_key, base_point)
 }
 
-/// Generates a public key from a private key using the Baby JubJub curve.
-/// An Optimized Version of the Baby JubJub Curve
+/// Optimized public key derivation using Baby JubJub curve.
 /// # Arguments
-/// * `private_key` - A field element representing the private key.
-/// * `base_point` - A point on the Baby JubJub curve used as the base point.
+/// * `private_key` - The private key as a `Field` element.
 /// # Returns
-/// A `Point` on the Baby JubJub curve representing the public key.
+/// The public key as a `Point` on the Baby JubJub curve.
 fn derive_public_key_optimized(private_key: Field) -> Point {
     let X = bjj.curve.mul(private_key, G);
     X 
 }
 
+
+/// Computes a shared secret key using ECDH with the Baby JubJub curve.
+/// # Arguments
+/// * `private_key` - The private key as a `Field` element.
+/// * `public_key` - The public key as a `Point` on the Baby JubJub curve.
+/// # Returns
+/// The shared secret key as a `Field` element.
 fn derive_shared_key(private_key: Field, public_key: Point) -> Field {
     let shared_key = bjj.curve.mul(private_key, public_key);
     shared_key.x
