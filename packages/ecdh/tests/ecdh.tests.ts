@@ -9,8 +9,7 @@ import { resolve } from 'path'
 import 'mocha'
 import circuit_ecdh from '../../ecdh/target/ecdh.json'
 
-// RUN: npx mocha -r ts-node/register tests/ecdh.tests.ts
-// This will not run with yarn tests
+
 
 function generatePrivateKey(): Uint8Array {
   return randomBytes(32)

@@ -63,6 +63,7 @@
 ## 📦 Packages
 
 - [merkle-trees](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/merkle-trees)
+- [ecdh](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/ecdh)
 
 ## 👥 Ways to contribute
 
