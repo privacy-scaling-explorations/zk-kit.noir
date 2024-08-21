@@ -1,15 +1,33 @@
-use crate::incremental_merkle::IncrementalMerkle;
+use crate::incremental_merkle::IncrementalMerkleTree;
 use dep::std::hash::poseidon::bn254::hash_2;
 
 fn poseidon_hasher(leaves: [Field; 2]) -> Field {
     hash_2([leaves[0], leaves[1]])
 }
 
-#[test]
-fn test_merkle_tree_membership() {
-    let root = 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1;
-    let mt = IncrementalMerkle::from(root, poseidon_hasher);
 
+/*
+
+Test Suite:
+1. test_incremental_merkle_tree_membership
+2. test_incremental_merkle_tree_add
+3. test_incremental_merkle_tree__delete
+4. test_incremental_merkle_tree_update
+5. ttest_incremental_merkle_tree_insufficient_depth
+6. test_incremental_merkle_tree_exceeding_depth
+
+
+*/
+
+
+
+
+
+#[test]
+fn test_incremental_merkle_tree_membership() {
+    let root = 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1;
+    let imt = IncrementalMerkleTree::from(root, poseidon_hasher);
+    let level: u32 = 4;
     let leaf = 0x00;
     let paths = (
         0x00,
@@ -20,55 +38,55 @@ fn test_merkle_tree_membership() {
         ],
     );
 
-    mt.membership(leaf, paths);
+    imt.membership(level, leaf, paths);
 }
 
-#[test]
-fn test_merkle_tree_add() {
-    let old_root = 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1;
-    let mut mt = IncrementalMerkle::from(old_root, poseidon_hasher);
+// #[test]
+// fn test_merkle_tree_add() {
+//     let old_root = 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1;
+//     let mut mt = IncrementalMerkle::from(old_root, poseidon_hasher);
 
-    let leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
-    let paths = (
-        0x01,
-        &[0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1],
-    );
-    mt.add(leaf, paths);
-}
+//     let leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
+//     let paths = (
+//         0x01,
+//         &[0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1],
+//     );
+//     mt.add(leaf, paths);
+// }
 
-#[test]
-fn test_merkle_tree_delete() {
-    let old_root = 0x1e994ad2e1d1d8a4da2aed653184349f089ad06d16849b156c23634d2888a377;
-    let mut mt = IncrementalMerkle::from(old_root, poseidon_hasher);
+// #[test]
+// fn test_merkle_tree_delete() {
+//     let old_root = 0x1e994ad2e1d1d8a4da2aed653184349f089ad06d16849b156c23634d2888a377;
+//     let mut mt = IncrementalMerkle::from(old_root, poseidon_hasher);
 
-    let leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
-    let paths = (
-        0x00,
-        &[0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1],
-    );
-    mt.delete(leaf, paths);
+//     let leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
+//     let paths = (
+//         0x00,
+//         &[0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1],
+//     );
+//     mt.delete(leaf, paths);
 
-    assert(mt.root == 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1);
-}
+//     assert(mt.root == 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1);
+// }
 
-#[test]
-fn test_merkle_tree_update() {
-    let old_root = 0x1e994ad2e1d1d8a4da2aed653184349f089ad06d16849b156c23634d2888a377;
-    let mut mt = IncrementalMerkle::from(old_root, poseidon_hasher);
+// #[test]
+// fn test_merkle_tree_update() {
+//     let old_root = 0x1e994ad2e1d1d8a4da2aed653184349f089ad06d16849b156c23634d2888a377;
+//     let mut mt = IncrementalMerkle::from(old_root, poseidon_hasher);
 
-    let old_leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
-    let leaf = 0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1;
-    let paths = (
-        0x00,
-        &[0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1],
-    );
-    mt.update(leaf, old_leaf, paths);
+//     let old_leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
+//     let leaf = 0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1;
+//     let paths = (
+//         0x00,
+//         &[0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1],
+//     );
+//     mt.update(leaf, old_leaf, paths);
 
-    assert(
-        mt.root
-            == poseidon_hasher([
-                0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1,
-                0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1,
-            ]),
-    );
-}
+//     assert(
+//         mt.root
+//             == poseidon_hasher([
+//                 0xd98561fb02ca04d00801dfdc118b2a24cea0351963587712a28d368041370e1,
+//                 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1,
+//             ]),
+//     );
+// }

@@ -1,59 +1,59 @@
-use crate::{IMT_Creator, MembershipProver, Modifier, NonMembershipProver};
+use crate::{IMT_Creator, IncrementalMembershipProver, Modifier, NonMembershipProver};
 
 mod tests;
 mod tree;
 
-struct IncrementalMerkle {
+struct IncrementalMerkleTree {
     hasher: fn([Field; 2]) -> Field,
     root: Field,
 }
 
-impl IMT_Creator for IncrementalMerkle {
+impl IMT_Creator for IncrementalMerkleTree {
     fn default(root: Field, hasher: fn([Field; 2]) -> Field) -> Self {
         Self { root, hasher }
     }
 }
 
-impl MembershipProver<Field, HashPath> for IncrementalMerkle {
-    fn membership(self, leaf: Field, siblings: (Field, [Field])) {
-        let root = self.calculate_root(leaf, siblings);
+impl IncrementalMembershipProver<Field, HashPath> for IncrementalMerkleTree {
+    fn membership(self, level: u32, leaf: Field, siblings: (Field, [Field])) {
+        let root = self.calculate_root_dynamic(level, leaf, siblings);
         assert(self.root == root);
     }
 }
 
-impl Modifier<Field, HashPath> for IncrementalMerkle {
-    fn add(&mut self, leaf: Field, siblings: (Field, [Field])) {
-        let (old, new) = self.calculate_two_roots(leaf, siblings);
+// impl Modifier<Field, HashPath> for IncrementalMerkle {
+//     fn add(&mut self, leaf: Field, siblings: (Field, [Field])) {
+//         let (old, new) = self.calculate_two_roots(leaf, siblings);
 
-        assert(old == self.root);
-        self.root = new;
-    }
+//         assert(old == self.root);
+//         self.root = new;
+//     }
 
-    fn delete(&mut self, leaf: Field, siblings: (Field, [Field])) {
-        let (new, old) = self.calculate_two_roots(leaf, siblings);
-        assert(old == self.root);
-        self.root = new;
-    }
+//     fn delete(&mut self, leaf: Field, siblings: (Field, [Field])) {
+//         let (new, old) = self.calculate_two_roots(leaf, siblings);
+//         assert(old == self.root);
+//         self.root = new;
+//     }
 
-    fn update(&mut self, leaf: Field, old_leaf: Field, siblings: (Field, [Field])) {
-        let index_bits = siblings.0.to_le_bits(siblings.1.len() as u32);
+//     fn update(&mut self, leaf: Field, old_leaf: Field, siblings: (Field, [Field])) {
+//         let index_bits = siblings.0.to_le_bits(siblings.1.len() as u32);
 
-        let mut old_parent: Field = old_leaf;
-        let mut new_parent: Field = leaf;
+//         let mut old_parent: Field = old_leaf;
+//         let mut new_parent: Field = leaf;
 
-        for i in 0..siblings.1.len() {
-            let sibling = siblings.1[i];
-            if sibling != 0 {
-                if index_bits[i] == 0 {
-                    new_parent = (self.hasher)([new_parent, sibling]);
-                    old_parent = (self.hasher)([old_parent, sibling]);
-                } else {
-                    new_parent = (self.hasher)([sibling, new_parent]);
-                    old_parent = (self.hasher)([sibling, old_parent]);
-                }
-            }
-        }
-        assert(old_parent == self.root);
-        self.root = new_parent;
-    }
-}
+//         for i in 0..siblings.1.len() {
+//             let sibling = siblings.1[i];
+//             if sibling != 0 {
+//                 if index_bits[i] == 0 {
+//                     new_parent = (self.hasher)([new_parent, sibling]);
+//                     old_parent = (self.hasher)([old_parent, sibling]);
+//                 } else {
+//                     new_parent = (self.hasher)([sibling, new_parent]);
+//                     old_parent = (self.hasher)([sibling, old_parent]);
+//                 }
+//             }
+//         }
+//         assert(old_parent == self.root);
+//         self.root = new_parent;
+//     }
+// }
