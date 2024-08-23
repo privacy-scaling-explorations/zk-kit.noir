@@ -10,7 +10,8 @@
     "check": "dprint check",
     "fmt": "dprint fmt",
     "postinstall": "husky && git config --local core.editor cat",
-    "test": "nargo test",
+    "test": "mocha --exit",
+    "test:nargo": "nargo test",
     "version:release": "changelogithub"
   },
   "keywords": [
