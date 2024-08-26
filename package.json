@@ -10,7 +10,7 @@
     "check": "dprint check",
     "fmt": "dprint fmt",
     "postinstall": "husky && git config --local core.editor cat",
-    "build": "nargo compile", 
+    "build": "nargo compile",
     "test": "npm run build && mocha && nargo test --workspace",
     "version:release": "changelogithub"
   },

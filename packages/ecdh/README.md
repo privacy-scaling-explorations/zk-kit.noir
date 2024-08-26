@@ -10,7 +10,6 @@ This repository introduces a set of functions and utilities for elliptic curve c
 - **Main Function:** A main function to generate ECDH shared keys, demonstrating the usage of the library.
 - **Testing:** Comprehensive tests to verify the correctness of key derivation and field conversion functions.
 
-
 ## Compiling the Circuit
 
 To compile the circuit, navigate one directory above the source code and run the following command:
@@ -18,7 +17,6 @@ To compile the circuit, navigate one directory above the source code and run the
 ```bash
 nargo compile
 ```
-
 
 ## Running Tests
 
