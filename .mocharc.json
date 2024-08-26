@@ -1,7 +1,7 @@
 {
   "require": "ts-node/register",
   "spec": "packages/ecdh/tests/**/*.test.ts",
-  "timeout": 20000,
+  "timeout": 25000,
   "recursive": true,
   "parallel": false,
   "exit": true

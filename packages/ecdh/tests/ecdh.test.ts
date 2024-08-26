@@ -34,12 +34,10 @@ describe('ECDH Circuit Tests', function() {
   })
 
   it('Should generate valid proof for correct input', async function() {
-    this.timeout(25000) // Optional: Increase timeout if needed
     expect(correctProof.proof).to.be.instanceOf(Uint8Array)
   })
 
   it('Should verify valid proof for correct input', async function() {
-    this.timeout(25000) // Increase timeout if needed
     expect(correctProof).to.not.be.undefined // Ensure proof is generated
     const verification = await noir.verifyProof(correctProof)
     expect(verification).to.be.true
