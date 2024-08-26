@@ -10,12 +10,7 @@ trait Calculator<T> {
 
 trait DynamicCalculator<T> {
     fn calculate_root_dynamic(self, max_depth: u32, entry: T, siblings: (Field, [Field])) -> Field;
-    // fn calculate_two_roots_dynamic(
-    //     self,
-    //     max_depth: u32,
-    //     entry: T,
-    //     siblings: (Field, [Field]),
-    // ) -> (Field, Field);
+    fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
 }
 
 trait IncrementalMembershipProver<T, U> {
