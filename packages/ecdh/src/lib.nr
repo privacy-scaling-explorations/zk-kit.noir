@@ -1,12 +1,7 @@
+mod globals;
 use dep::std::ec::tecurve::affine::{Curve, Point};
-use dep::std::ec::consts::te::{baby_jubjub};
-
 
 // @@@@@@ Core ECDH Implementation
-
-// Globals Edward Curves supported Baby JubJub
-global bjj = baby_jubjub();
-global G = bjj.base8;
 
 /// Converts a byte array to a field element.
 /// # Arguments
@@ -26,7 +21,6 @@ pub fn field_from_bytes(bytes: [u8; 32], big_endian: bool) -> Field {
 
     as_field
 }
-
 
 /// Computes a public key from a private key using the Baby JubJub curve.
 /// # Arguments
@@ -48,10 +42,9 @@ pub fn derive_public_key(private_key: Field) -> Point {
 /// # Returns
 /// The public key as a `Point` on the Baby JubJub curve.
 pub fn derive_public_key_optimized(private_key: Field) -> Point {
-    let X = bjj.curve.mul(private_key, G);
-    X 
+    let X = globals::BJJ.curve.mul(private_key, globals::G);
+    X
 }
-
 
 /// Computes a shared secret key using ECDH with the Baby JubJub curve.
 /// # Arguments
@@ -60,9 +53,6 @@ pub fn derive_public_key_optimized(private_key: Field) -> Point {
 /// # Returns
 /// The shared secret key as a `Field` element.
 pub fn derive_shared_key(private_key: Field, public_key: Point) -> Field {
-    let shared_key = bjj.curve.mul(private_key, public_key);
+    let shared_key = globals::BJJ.curve.mul(private_key, public_key);
     shared_key.x
 }
-
-
-

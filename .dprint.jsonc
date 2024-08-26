@@ -19,6 +19,7 @@
     "yarn.lock",
     ".yarn",
     "packages/merkle-trees/src/globals.nr",
+    "packages/ecdh/src/globals.nr",
   ],
   "plugins": [
     "https://plugins.dprint.dev/json-0.19.3.wasm",
