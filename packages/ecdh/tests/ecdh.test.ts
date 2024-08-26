@@ -6,7 +6,7 @@ import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import 'mocha';
-import circuit_ecdh from '../target/ecdh.json';
+import circuit_ecdh from '../../../target/ecdh.json';
 
 function generatePrivateKey(): Uint8Array {
   return randomBytes(32);
@@ -18,7 +18,7 @@ describe('ECDH Circuit Tests', function() {
   let correctProof: ProofData;
 
   beforeEach(async () => {
-    const circuitFile = readFileSync(resolve(__dirname, '../target/ecdh.json'), 'utf-8');
+    const circuitFile = readFileSync(resolve(__dirname, '../../../target/ecdh.json'), 'utf-8');
     const circuit = JSON.parse(circuitFile);
     backend = new BarretenbergBackend(circuit);
     noir = new Noir(circuit, backend);
