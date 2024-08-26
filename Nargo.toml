@@ -1,3 +1,2 @@
 [workspace]
-compiler_version = ">=0.32.0"
-members = ["packages/ecdh"]
+members = ["packages/ecdh", "packages/merkle-trees"]
