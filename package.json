@@ -9,7 +9,7 @@
   "scripts": {
     "check": "dprint check",
     "fmt": "dprint fmt",
-    "postinstall": "husky && git config --local core.editor cat",
+    "postinstall": "node_modules/husky/bin.mjs && git config --local core.editor cat",
     "test": "nargo test",
     "version:release": "changelogithub"
   },
