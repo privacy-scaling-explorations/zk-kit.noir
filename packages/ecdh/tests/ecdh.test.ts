@@ -35,8 +35,6 @@ describe('ECDH Circuit Tests', function() {
 
   it('Should generate valid proof for correct input', async function() {
     this.timeout(25000); // Optional: Increase timeout if needed
-    // Assert that correctProof is defined and has the expected structure
-    expect(correctProof).to.not.be.undefined;
     expect(correctProof.proof).to.be.instanceOf(Uint8Array);
   });
 

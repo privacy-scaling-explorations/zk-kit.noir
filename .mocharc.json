@@ -3,5 +3,6 @@
   "spec": "packages/ecdh/tests/**/*.test.ts",
   "timeout": 20000,
   "recursive": true,
+  "parallel": false,
   "exit": true
 }
