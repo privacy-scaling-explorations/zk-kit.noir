@@ -33,7 +33,7 @@
     "changelogithub": "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch",
     "czg": "^1.9.1",
     "dprint": "^0.46.3",
-    "husky": "4",
+    "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
