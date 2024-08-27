@@ -10,31 +10,60 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  deps:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-env.outputs.cache-key }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Output cache key
+        id: cache-env
+        run: echo "cache-key=${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ steps.cache-env.outputs.cache-key }}
+          restore-keys: ${{ runner.os }}-node_modules-
+
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn
+
   changed-files:
     runs-on: ubuntu-latest
     outputs:
-      any_nr_changed: ${{ steps.changed-files.outputs.any_changed }}
+      nr_any__changed: ${{ steps.changed-files.outputs.nr_any_changed }}
+      ts_any_changed: ${{ steps.changed-files.outputs.ts_any_changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: tj-actions/changed-files@v44
         id: changed-files
         with:
-          files: |
-            packages/**/*.{nr,toml}
-            Nargo.toml
+          files_yaml: |
+            nr:
+              - **/*.{nr,toml}
+            ts:
+              - tsconfig.json
+              - **/*.ts
 
   style:
+    needs: deps
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
-      - run: yarn
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: ${{ needs.deps.outputs.cache-key }}
       - run: yarn check
 
-  test:
+  test.nargo:
     needs: changed-files
     if: needs.changed-files.outputs.any_nr_changed == 'true'
     runs-on: ubuntu-latest
@@ -44,3 +73,28 @@ jobs:
         with:
           toolchain: 0.30.0
       - run: nargo test
+
+  test.mocha:
+    needs: deps
+    if: needs.changed-files.outputs.ts_any_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: ${{ needs.deps.outputs.cache-key }}
+      - run: yarn run mocha
+
+  tests:
+    needs: [test.mocha, test.nargo]
+    # workaround for https://github.com/orgs/community/discussions/13690
+    # https://stackoverflow.com/a/77066140/9771158
+    if: ${{ !(failure() || cancelled()) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tests OK (passed or skipped)
+        run: true
