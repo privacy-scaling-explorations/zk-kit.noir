@@ -4,6 +4,9 @@ logs
 yarn-debug.log*
 yarn-error.log*
 
+# Nargo Compile
+target/
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

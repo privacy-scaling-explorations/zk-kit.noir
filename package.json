@@ -10,7 +10,8 @@
     "check": "dprint check",
     "fmt": "dprint fmt",
     "postinstall": "husky && git config --local core.editor cat",
-    "test": "nargo test",
+    "build": "nargo compile",
+    "test": "npm run build && mocha && nargo test --workspace",
     "version:release": "changelogithub"
   },
   "keywords": [
@@ -25,12 +26,21 @@
   ],
   "packageManager": "yarn@4.2.1",
   "devDependencies": {
-    "@commitlint/cli": "^18.6.1",
-    "@commitlint/config-conventional": "^18.6.2",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@noir-lang/backend_barretenberg": "^0.30.0",
+    "@noir-lang/noir_js": "^0.30.0",
+    "@noir-lang/noir_wasm": "^0.32.0",
+    "@types/chai": "^4",
+    "@types/mocha": "^10",
+    "chai": "^4.5.0",
     "changelogithub": "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch",
     "czg": "^1.9.1",
     "dprint": "^0.46.3",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2"
+    "lint-staged": "^15.2.2",
+    "mocha": "^10.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }
