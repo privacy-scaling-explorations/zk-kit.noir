@@ -3,6 +3,9 @@ mod incremental_merkle;
 mod merkle;
 mod sparse_merkle;
 
+
+- [ECDH](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/ecdh) - simple implementation of ECDH on the Baby Jubjub curve
+
 trait Calculator<T> {
     fn calculate_root(self, entry: T, siblings: (Field, [Field])) -> Field;
     fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
