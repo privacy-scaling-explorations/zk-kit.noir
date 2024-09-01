@@ -8,14 +8,26 @@ pub fn calculate_signature(message: [u8; 32], random_nonce: Field, private_key: 
     let z = field_from_bytes(std::hash::sha256(message), true);
     let k = random_nonce;
     let point = globals::BJJ.curve.mul(k, globals::G);
-    let r = point.x % globals::BJJ_ORDER;
-    let s = (mod_inv(k, globals::BJJ_ORDER) * (z + r * private_key)) % globals::BJJ_ORDER;
+    let r = reduce_field(point.x);
+    let s = reduce_field(mod_inv(k, globals::BJJ_ORDER) * (z + r * private_key));
     if (r == 0) | (s == 0){
         assert(false);
     } 
     (r, s)
 }
 
+
+
+pub fn reduce_field(x: Field) -> Field {
+    let order = globals::BJJ_ORDER;
+    let mut result = x;
+    for _ in 0..100 {  // Adjust this range as needed
+        let difference = result - order;
+        let is_negative = difference as i64 < 0;
+        result = if is_negative { result } else { difference };
+    }
+    result
+}
 
 
 
