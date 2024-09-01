@@ -7,9 +7,27 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import 'mocha'
 
+const BJJ_ORDER = BigInt("2736030358979909402780800718157159386076813972158567259200215660948447373041");
+
 
 function generatePrivateKey(): Uint8Array {
-    return randomBytes(32)
+  return randomBytes(32)
+}
+
+function generateRandomNonce(): Uint8Array {
+  const randomBytes = new Uint8Array(32);
+  crypto.getRandomValues(randomBytes);
+  let nonceBigInt = BigInt("0x" + Array.from(randomBytes)
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join(""));
+  nonceBigInt = nonceBigInt % BJJ_ORDER;
+  const resultArray = new Uint8Array(32);
+  for (let i = 0; i < 32; i++) {
+      resultArray[31 - i] = Number(nonceBigInt & BigInt(255));
+      nonceBigInt = nonceBigInt >> BigInt(8);
+  }
+
+  return resultArray;
 }
 
 describe('ECDSA Circuit Tests', function() {
