@@ -4,6 +4,13 @@ use dep::std::ec::tecurve::affine::{Curve, Point};
 
 // @@@@@@ Core ECDSA Implementation
 
+/// Calculates an ECDSA signature for a given message using a private key and a random nonce.
+/// # Arguments
+/// * `message` - A 32-byte array representing the message to be signed.
+/// * `random_nonce` - A `Field` element representing the random nonce used in the signature generation.
+/// * `private_key` - A `Field` element representing the signer's private key.
+/// # Returns
+/// A tuple containing two `Field` elements (r, s) that represent the ECDSA signature.
 pub fn calculate_signature(message: [u8; 32], random_nonce: Field, private_key: Field) -> (Field, Field) {
     let z = field_from_bytes(std::hash::sha256(message), true);
     let k = random_nonce;
@@ -17,7 +24,11 @@ pub fn calculate_signature(message: [u8; 32], random_nonce: Field, private_key: 
 }
 
 
-
+/// Reduces a field element modulo the order of the curve to ensure it lies within the valid range.
+/// # Arguments
+/// * `x` - A `Field` element to be reduced.
+/// # Returns
+/// A `Field` element that represents `x` reduced modulo the order of the Baby JubJub curve.
 pub fn reduce_field(x: Field) -> Field {
     let order = globals::BJJ_ORDER;
     let mut result = x;
@@ -31,13 +42,79 @@ pub fn reduce_field(x: Field) -> Field {
 
 
 
-// Verify Signature
-
-pub fn verify_signature(signature: [u8; 64], message_hash: [u8]){
-
+/// Verifies an ECDSA signature against a given message hash.
+/// # Arguments
+/// * `signature` - A 64-byte array representing the signature to be verified.
+/// * `message_hash` - A byte array representing the hash of the message that was signed.
+/// # Returns
+/// A boolean indicating whether the signature is valid (`true`) or not (`false`).
+pub fn verify_signature(signature: (Field, Field), message: [u8; 32], public_key: Point) -> bool {
+    let (r, s) = signature;
+    
+    let range_check = (r as i64 != 0) & (r as i64 < globals::BJJ_ORDER as i64) & 
+                      (s as i64 != 0) & (s as i64 < globals::BJJ_ORDER as i64);
+    
+    if range_check {
+        // Calculate the message hash
+        let z = field_from_bytes(std::hash::sha256(message), true);
+        
+        // Calculate s_inv (modular inverse of s)
+        let s_inv = mod_inv(s, globals::BJJ_ORDER);
+        
+        // Calculate u1 and u2
+        let u1 = z * s_inv;
+        let u2 = r * s_inv;
+        
+        // Calculate the point R = u1*G + u2*public_key
+        let R1 = globals::BJJ.curve.mul(u1, globals::G);
+        let R2 = globals::BJJ.curve.mul(u2, public_key);
+        let R = R1.add(R2);
+        
+        // Check if R.x mod n == r
+        let v = reduce_field(R.x);
+        v as i64 == r as i64
+    } else {
+        false
+    }
 }
 
-// Mod Inverse 
+
+/// Computes the modular inverse of a field element with respect to a given modulus.
+/// # Arguments
+/// * `a` - A `Field` element for which the modular inverse is to be calculated.
+/// * `m` - A `Field` element representing the modulus.
+/// # Returns
+/// The modular inverse of `a` modulo `m`.
+pub fn mod_inv(a: Field, m: Field) -> Field {
+    let mut t = 0;
+    let mut new_t = 1;
+    let mut r = m;
+    let mut new_r = a;
+
+    for _ in 0..254 {  // Assuming 254-bit field, adjust if necessary
+        if new_r == 0 {
+            assert(r as i64 > 1, "modular inverse does not exist");
+            if t < 0 {
+                t += m as u64;
+            }
+            result = t;
+            break;
+        }
+
+        let quotient = r / new_r;
+
+        let temp_t = new_t;
+        new_t = t - quotient * new_t;
+        t = temp_t;
+
+        let temp_r = new_r;
+        new_r = r - quotient * new_r;
+        r = temp_r;
+    }
+
+    assert(false, "modular inverse calculation did not converge");
+    0 // This line will never be reached due to the assert, but is needed for compilation
+}
 
 
 
