@@ -11,36 +11,23 @@ use dep::std::ec::tecurve::affine::{Curve, Point};
 /// * `private_key` - A `Field` element representing the signer's private key.
 /// # Returns
 /// A tuple containing two `Field` elements (r, s) that represent the ECDSA signature.
-pub fn calculate_signature(message: [u8; 32], random_nonce: Field, private_key: Field) -> (Field, Field) {
+pub fn calculate_signature(
+    message: [u8; 32],
+    random_nonce: Field,
+    private_key: Field,
+) -> (Field, Field) {
     let z = field_from_bytes(std::hash::sha256(message), true);
+    // Noir cannot generate a random number, needs to be inputted from Integration Tests
     let k = random_nonce;
+    // Random Point
     let point = globals::BJJ.curve.mul(k, globals::G);
-    let r = reduce_field(point.x);
-    let s = reduce_field(mod_inv(k, globals::BJJ_ORDER) * (z + r * private_key));
-    if (r == 0) | (s == 0){
+    let r = point.x % globals::BJJ_ORDER;
+    let s = (mod_inv(k, globals::BJJ_ORDER) * (z + r * private_key)) % globals::BJJ_ORDER;
+    if (r == 0) | (s == 0) {
         assert(false);
-    } 
+    }
     (r, s)
 }
-
-
-/// Reduces a field element modulo the order of the curve to ensure it lies within the valid range.
-/// # Arguments
-/// * `x` - A `Field` element to be reduced.
-/// # Returns
-/// A `Field` element that represents `x` reduced modulo the order of the Baby JubJub curve.
-pub fn reduce_field(x: Field) -> Field {
-    let order = globals::BJJ_ORDER;
-    let mut result = x;
-    for _ in 0..100 {  // Adjust this range as needed
-        let difference = result - order;
-        let is_negative = difference as i64 < 0;
-        result = if is_negative { result } else { difference };
-    }
-    result
-}
-
-
 
 /// Verifies an ECDSA signature against a given message hash.
 /// # Arguments
@@ -48,36 +35,7 @@ pub fn reduce_field(x: Field) -> Field {
 /// * `message_hash` - A byte array representing the hash of the message that was signed.
 /// # Returns
 /// A boolean indicating whether the signature is valid (`true`) or not (`false`).
-pub fn verify_signature(signature: (Field, Field), message: [u8; 32], public_key: Point) -> bool {
-    let (r, s) = signature;
-    
-    let range_check = (r as i64 != 0) & (r as i64 < globals::BJJ_ORDER as i64) & 
-                      (s as i64 != 0) & (s as i64 < globals::BJJ_ORDER as i64);
-    
-    if range_check {
-        // Calculate the message hash
-        let z = field_from_bytes(std::hash::sha256(message), true);
-        
-        // Calculate s_inv (modular inverse of s)
-        let s_inv = mod_inv(s, globals::BJJ_ORDER);
-        
-        // Calculate u1 and u2
-        let u1 = z * s_inv;
-        let u2 = r * s_inv;
-        
-        // Calculate the point R = u1*G + u2*public_key
-        let R1 = globals::BJJ.curve.mul(u1, globals::G);
-        let R2 = globals::BJJ.curve.mul(u2, public_key);
-        let R = R1.add(R2);
-        
-        // Check if R.x mod n == r
-        let v = reduce_field(R.x);
-        v as i64 == r as i64
-    } else {
-        false
-    }
-}
-
+pub fn verify_signature(signature: (Field, Field), message: [u8; 32], public_key: Point) -> bool {}
 
 /// Computes the modular inverse of a field element with respect to a given modulus.
 /// # Arguments
@@ -86,37 +44,54 @@ pub fn verify_signature(signature: (Field, Field), message: [u8; 32], public_key
 /// # Returns
 /// The modular inverse of `a` modulo `m`.
 pub fn mod_inv(a: Field, m: Field) -> Field {
-    let mut t = 0;
-    let mut new_t = 1;
-    let mut r = m;
-    let mut new_r = a;
+    let result = if m == 1 {
+        1
+    } else {
+        let mut a = a;
+        let mut m0: Field = m;
+        let mut y: Field = 0;
+        let mut x: Field = 1;
+        let mut inverse_found: Field = 0;
 
-    for _ in 0..254 {  // Assuming 254-bit field, adjust if necessary
-        if new_r == 0 {
-            assert(r as i64 > 1, "modular inverse does not exist");
-            if t < 0 {
-                t += m as u64;
+        // We need to set a reasonable upper bound for the number of iterations
+        // This should be log2(m) + 1, but we'll use a constant for simplicity
+        // Adjust this value based on the maximum expected size of your modulus
+        let max_iterations = 256;
+
+        for i in 0..max_iterations {
+            if (a > 1) & (inverse_found == 0) {
+                // q is quotient
+                let q: Field = a / m0;
+                let t: Field = m0;
+
+                // m0 is remainder now, process same as Euclid's algo
+                m0 = a % m0;
+                a = t;
+                t = y;
+
+                // Update x and y
+                y = x - q * y;
+                x = t;
+            } else {
+                inverse_found = 1;
             }
-            result = t;
-            break;
         }
 
-        let quotient = r / new_r;
+        // Make x positive
+        if x < 0 {
+            x += m;
+        }
 
-        let temp_t = new_t;
-        new_t = t - quotient * new_t;
-        t = temp_t;
+        // Check if a and m are coprime
+        if a != 1 {
+            assert(false); // or use Noir's specific assertion/error handling
+        }
 
-        let temp_r = new_r;
-        new_r = r - quotient * new_r;
-        r = temp_r;
-    }
+        x
+    };
 
-    assert(false, "modular inverse calculation did not converge");
-    0 // This line will never be reached due to the assert, but is needed for compilation
+    result
 }
-
-
 
 /// Converts a byte array to a field element.
 /// # Arguments
@@ -156,9 +131,7 @@ pub fn derive_public_key(private_key: Field) -> Point {
 /// * `private_key` - The private key as a `Field` element.
 /// # Returns
 /// The public key as a `Point` on the Baby JubJub curve.
-pub fn derive_public_key_optimized(private_key: Field) -> Point{
+pub fn derive_public_key_optimized(private_key: Field) -> Point {
     let X = globals::BJJ.curve.mul(private_key, globals::G);
     X
 }
-
-
