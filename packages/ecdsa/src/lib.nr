@@ -15,14 +15,16 @@ pub fn calculate_signature(
     message: [u8; 32],
     random_nonce: Field,
     private_key: Field,
-) -> (Field, Field) {
+) -> (u64, u64) {
     let z = field_from_bytes(std::hash::sha256(message), true);
     // Noir cannot generate a random number, needs to be inputted from Integration Tests
     let k = random_nonce;
     // Random Point
     let point = globals::BJJ.curve.mul(k, globals::G);
-    let r = point.x % globals::BJJ_ORDER;
-    let s = (mod_inv(k, globals::BJJ_ORDER) * (z + r * private_key)) % globals::BJJ_ORDER;
+    let r = (point.x as u64) % (globals::BJJ_ORDER as u64);
+    let s = ((mod_inv(k, globals::BJJ_ORDER) as u64) * ((z as u64) + r * (private_key as u64)))
+        as u64
+        % globals::BJJ_ORDER as u64;
     if (r == 0) | (s == 0) {
         assert(false);
     }
@@ -59,13 +61,13 @@ pub fn mod_inv(a: Field, m: Field) -> Field {
         let max_iterations = 256;
 
         for i in 0..max_iterations {
-            if (a > 1) & (inverse_found == 0) {
+            if (a as u32 > 1) & (inverse_found as u32 == 0) {
                 // q is quotient
                 let q: Field = a / m0;
-                let t: Field = m0;
+                let mut t: Field = m0;
 
                 // m0 is remainder now, process same as Euclid's algo
-                m0 = a % m0;
+                m0 = (a as u32 % m0 as u32) as Field;
                 a = t;
                 t = y;
 
@@ -78,7 +80,7 @@ pub fn mod_inv(a: Field, m: Field) -> Field {
         }
 
         // Make x positive
-        if x < 0 {
+        if (x as i32) < 0 {
             x += m;
         }
 
