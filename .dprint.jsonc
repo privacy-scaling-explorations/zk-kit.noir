@@ -20,6 +20,7 @@
     ".yarn",
     "packages/merkle-trees/src/globals.nr",
     "packages/ecdh/src/globals.nr",
+    "packages/ecdsa/src/globals.nr",
     "target/",
   ],
   "plugins": [

@@ -10,7 +10,7 @@ use dep::std::ec::tecurve::affine::{Curve, Point};
 /// * `random_nonce` - A `Field` element representing the random nonce used in the signature generation.
 /// * `private_key` - A `Field` element representing the signer's private key.
 /// # Returns
-/// A tuple containing two `Field` elements (r, s) that represent the ECDSA signature.
+/// A tuple containing two `u64` elements (r, s) that represent the ECDSA signature.
 pub fn calculate_signature(
     message: [u8; 32],
     random_nonce: Field,
@@ -18,13 +18,11 @@ pub fn calculate_signature(
 ) -> (u64, u64) {
     let z = field_from_bytes(std::hash::sha256(message), true);
     // Noir cannot generate a random number, needs to be inputted from Integration Tests
-    let k = random_nonce;
     // Random Point
-    let point = globals::BJJ.curve.mul(k, globals::G);
+    let point = globals::BJJ.curve.mul(random_nonce, globals::G);
     let r = (point.x as u64) % (globals::BJJ_ORDER as u64);
-    let s = ((mod_inv(k, globals::BJJ_ORDER) as u64) * ((z as u64) + r * (private_key as u64)))
-        as u64
-        % globals::BJJ_ORDER as u64;
+    let s = ((mod_inv(random_nonce, globals::BJJ_ORDER) as u64) * ((z as u64) + r * (private_key as u64)))
+        % (globals::BJJ_ORDER as u64);
     if (r == 0) | (s == 0) {
         assert(false);
     }
@@ -33,11 +31,42 @@ pub fn calculate_signature(
 
 /// Verifies an ECDSA signature against a given message hash.
 /// # Arguments
-/// * `signature` - A 64-byte array representing the signature to be verified.
-/// * `message_hash` - A byte array representing the hash of the message that was signed.
+/// * `signature` - A tuple containing two `Field` elements (r, s) representing the signature.
+/// * `message` - A 32-byte array representing the message that was signed.
+/// * `public_key` - A `Point` representing the signer's public key.
 /// # Returns
 /// A boolean indicating whether the signature is valid (`true`) or not (`false`).
-pub fn verify_signature(signature: (Field, Field), message: [u8; 32], public_key: Point) -> bool {}
+pub fn verify_signature(signature: (u64, u64), message: [u8; 32], public_key: Point) -> bool {
+    let (r, s) = signature;
+    let z = field_from_bytes(std::hash::sha256(message), true);
+
+    let signature_valid = (r >= 1)
+        & (r <= (globals::BJJ_ORDER as u64) - 1)
+        & (s >= 1)
+        & (s <= (globals::BJJ_ORDER as u64) - 1);
+
+    let w = mod_inv(s as Field, globals::BJJ_ORDER);
+
+    // Calculate first point scalar
+    let z_u64 = z as u64;
+    let w_u64 = w as u64;
+    let scalar1_temp = z_u64 * w_u64;
+    let scalar1 = scalar1_temp % (globals::BJJ_ORDER as u64);
+
+    // Calculate second point scalar
+    let scalar2_temp = r * w_u64;
+    let scalar2 = scalar2_temp % (globals::BJJ_ORDER as u64);
+
+    let point1 = globals::BJJ.curve.mul(scalar1 as Field, globals::G);
+    let point2 = globals::BJJ.curve.mul(scalar2 as Field, public_key);
+    let sum_point: Point = globals::BJJ.curve.add(point1, point2);
+
+    let sum_point_x_u64 = sum_point.x as u64;
+    let x_mod = sum_point_x_u64 % (globals::BJJ_ORDER as u64);
+    let x_valid = x_mod == r;
+
+    signature_valid & x_valid
+}
 
 /// Computes the modular inverse of a field element with respect to a given modulus.
 /// # Arguments
@@ -60,7 +89,7 @@ pub fn mod_inv(a: Field, m: Field) -> Field {
         // Adjust this value based on the maximum expected size of your modulus
         let max_iterations = 256;
 
-        for i in 0..max_iterations {
+        for _ in 0..max_iterations {
             if (a as u32 > 1) & (inverse_found as u32 == 0) {
                 // q is quotient
                 let q: Field = a / m0;
@@ -134,6 +163,5 @@ pub fn derive_public_key(private_key: Field) -> Point {
 /// # Returns
 /// The public key as a `Point` on the Baby JubJub curve.
 pub fn derive_public_key_optimized(private_key: Field) -> Point {
-    let X = globals::BJJ.curve.mul(private_key, globals::G);
-    X
+    globals::BJJ.curve.mul(private_key, globals::G)
 }
