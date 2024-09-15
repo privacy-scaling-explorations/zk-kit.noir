@@ -10,4 +10,3 @@ fn main(private_key: [u8; 32], message: [u8; 32], random_nonce: [u8; 32]) {
     let u: bool = false;
     assert(u != true);
 }
-

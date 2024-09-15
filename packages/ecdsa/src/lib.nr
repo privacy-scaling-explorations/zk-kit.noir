@@ -21,7 +21,8 @@ pub fn calculate_signature(
     // Random Point
     let point = globals::BJJ.curve.mul(random_nonce, globals::G);
     let r = (point.x as u64) % (globals::BJJ_ORDER as u64);
-    let s = ((mod_inv(random_nonce, globals::BJJ_ORDER) as u64) * ((z as u64) + r * (private_key as u64)))
+    let s = ((mod_inv(random_nonce, globals::BJJ_ORDER) as u64)
+        * ((z as u64) + r * (private_key as u64)))
         % (globals::BJJ_ORDER as u64);
     if (r == 0) | (s == 0) {
         assert(false);
