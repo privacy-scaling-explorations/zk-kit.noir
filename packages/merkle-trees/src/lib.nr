@@ -1,10 +1,14 @@
-mod globals;
 mod merkle;
 mod sparse_merkle;
 
 trait Calculator<T> {
-    fn calculate_root(self, entry: T, siblings: (Field, [Field])) -> Field;
-    fn calculate_two_roots(self, entry: T, siblings: (Field, [Field])) -> (Field, Field);
+    fn calculate_root<let N: u32>(self, entry: T, indexes: Field, hash_path: [Field; N]) -> Field;
+    fn calculate_two_roots<let N: u32>(
+        self,
+        entry: T,
+        indexes: Field,
+        hash_path: [Field; N],
+    ) -> (Field, Field);
 }
 
 trait SMT_Creator {
@@ -57,13 +61,13 @@ trait MT_Creator {
     }
 }
 
-trait MembershipProver<T, U> {
+trait MembershipProver<T, K, U> {
     /**
      * Proves that a leaf is a member of the tree.
      * @param leaf The leaf to prove
      * @param path The hash path and indices
      */
-    fn membership(self, entry: T, path: U);
+    fn membership<let N: u32>(self, entry: T, indexes: K, hash_path: [U; N]);
 }
 
 trait NonMembershipProver {
@@ -79,11 +83,11 @@ trait NonMembershipProver {
         self,
         entry: (Field, Field),
         matching_entry: (Field, Field),
-        siblings: [Field],
+        siblings: [Field; 256],
     );
 }
 
-trait Modifier<T, U> {
+trait Modifier<T, K, U> {
     /**
      * Proves the addition of a NEW entry to an existing tree. Based on the siblings first validates the correctness of
      * the old root. Then uses the new entry and the siblings to calculate the new tree root.
@@ -92,7 +96,7 @@ trait Modifier<T, U> {
      * @param new_entry The new entry to prove addition
      * @param siblings The siblings (and indices for MT proofs)
      */
-    fn add(&mut self, new_entry: T, siblings: U);
+    fn add<let N: u32>(&mut self, new_entry: T, indexes: K, hash_path: [U; N]);
 
     /**
      * Proves the deletion of an existing entry from a tree. Based on the siblings first does a membership proof
@@ -100,7 +104,7 @@ trait Modifier<T, U> {
      * @param entry Contains key and value of the to-be-deleted entry: (key, value)
      * @param siblings The siblings (and indices for MT proofs)
      */
-    fn delete(&mut self, entry: T, siblings: U);
+    fn delete<let N: u32>(&mut self, entry: T, indexes: K, hash_path: [U; N]);
 
     /**
      * Proves the update of the value of an existing entry in a tree. Based on the siblings first does a membership proof
@@ -109,5 +113,5 @@ trait Modifier<T, U> {
      * @param old_entry Contains key and value of the entry to be updated: (key, value)
      * @param siblings The siblings (and indices for MT proofs)
      */
-    fn update(&mut self, new_value: Field, old_entry: T, siblings: U);
+    fn update<let N: u32>(&mut self, new_value: Field, old_entry: T, indexes: K, hash_path: [U; N]);
 }
