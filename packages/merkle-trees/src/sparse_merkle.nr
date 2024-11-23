@@ -3,7 +3,7 @@ use crate::{MembershipProver, Modifier, NonMembershipProver, SMT_Creator};
 mod tests;
 mod tree;
 
-struct SparseMerkleTree {
+pub struct SparseMerkleTree {
     root: Field,
     leaf_hasher: fn([Field; 3]) -> Field,
     hasher: fn([Field; 2]) -> Field,
@@ -85,7 +85,7 @@ impl Modifier<(Field, Field), Field, Field> for SparseMerkleTree {
         let key = old_entry.0;
         let old_value = old_entry.1;
         // both the old entry and new entry share the same key that is used to calculate the path
-        let path = key.to_be_bits();
+        let path: [u1; N] = key.to_be_bits();
 
         // old_parent is a container to temporarily store the nodes that ultimately lead to the OLD root
         let mut old_parent: Field = (self.leaf_hasher)([key, old_value, 1]);

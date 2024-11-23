@@ -16,7 +16,7 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
         indexes: Field,
         hash_path: [Field; N],
     ) -> Field {
-        let index_bits = indexes.to_be_bits();
+        let index_bits: [u1; N] = indexes.to_be_bits();
 
         // serves as container for hashes and is initialized to be the leaf node
         let mut node = (self.leaf_hasher)([entry.0, entry.1, 1]);
@@ -55,7 +55,7 @@ impl Calculator<(Field, Field)> for SparseMerkleTree {
         indexes: Field,
         hash_path: [Field; N],
     ) -> (Field, Field) {
-        let index_bits = indexes.to_be_bits();
+        let index_bits: [u1; N] = indexes.to_be_bits();
 
         // root_with_leaf is a container for hashes to derive the root node for the tree that
         // includes the entry

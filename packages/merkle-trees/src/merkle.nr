@@ -1,10 +1,10 @@
-use crate::{MT_Creator, MembershipProver, Modifier};
+use crate::{MembershipProver, Modifier, MT_Creator};
 mod tests;
 mod tree;
 
 struct MerkleTree {
     hasher: fn([Field; 2]) -> Field,
-    root: Field,
+    pub root: Field,
 }
 
 impl MT_Creator for MerkleTree {

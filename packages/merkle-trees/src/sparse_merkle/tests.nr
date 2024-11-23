@@ -1,3 +1,3 @@
-// mod pedersen;
-// mod poseidon;
-// mod poseidon2;
+mod pedersen;
+mod poseidon;
+mod poseidon2;
