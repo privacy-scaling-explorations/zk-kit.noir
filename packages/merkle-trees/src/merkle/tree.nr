@@ -57,7 +57,8 @@ impl Calculator<Field> for MerkleTree {
         let mut root_with_leaf = leaf;
         // root_without_leaf is a container for hashes to derive the root node for the tree that
         // doesn't include the entry
-        let mut root_without_leaf: Field = 0;
+        let mut root_without_leaf: Field = hash_path[0];
+
         // iterate over the levels of the tree from bottom to top
         for i in 0..hash_path.len() {
             let sibling = hash_path[i];
