@@ -18,7 +18,7 @@ fn test_merkle_tree_membership() {
 
 #[test]
 fn test_merkle_tree_add() {
-    let old_root = 0x15e321a84ad14e8182bad513f664bed0028594caa1485295a410fd09135654b9;
+    let old_root = 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1;
     let mut mt = MerkleTree::from(old_root, poseidon_hasher);
 
     let leaf = 0x26059ac500f935d65bf50b096f757fe1dcb3568822d4e4cb7a8dc95f7bbd24f7;
@@ -35,7 +35,7 @@ fn test_merkle_tree_delete() {
     let paths = [0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1];
     mt.delete(leaf, 0x01, paths);
 
-    assert(mt.root == 0x15e321a84ad14e8182bad513f664bed0028594caa1485295a410fd09135654b9);
+    assert(mt.root == 0x1910f234d14bea7c640841c9fd0d765e8599a4cd527285590e4159e66b912be1);
 }
 
 #[test]
