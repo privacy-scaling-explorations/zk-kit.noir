@@ -7,8 +7,8 @@
   "bugs": "https://github.com/privacy-scaling-explorations/zk-kit.noir/issues",
   "private": true,
   "scripts": {
-    "check": "dprint check",
-    "fmt": "dprint fmt",
+    "check": "concurrently -c auto -n dprint,noirfmt 'dprint check' 'nargo fmt --check'",
+    "fmt": "concurrently -c auto -n dprint,noirfmt 'dprint fmt' 'nargo fmt'",
     "postinstall": "husky && git config --local core.editor cat",
     "build": "nargo compile",
     "test": "npm run build && mocha && nargo test --workspace",
@@ -35,6 +35,7 @@
     "@types/mocha": "^10",
     "chai": "^4.5.0",
     "changelogithub": "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch",
+    "concurrently": "^9.1.0",
     "czg": "^1.9.1",
     "dprint": "^0.46.3",
     "husky": "^9.0.11",
