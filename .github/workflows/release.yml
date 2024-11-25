@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   release:
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 20
           cache: yarn
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
 
       - name: Authentication
         run: |

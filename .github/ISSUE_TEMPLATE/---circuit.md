@@ -4,7 +4,6 @@ about: Propose a new ZK-kit Noir circuit
 title: ''
 labels: 'feature :rocket:'
 assignees: ''
-
 ---
 
 **Describe the package you'd like**
