@@ -51,7 +51,7 @@ For commits it is recommended to use [Conventional Commits](https://www.conventi
 
 Don't worry if it looks complicated. In our repositories, `git commit` opens an interactive app to create your conventional commit.
 
-Each commit message consists of a **header**, a **body** and a **footer**. The **header** has a special format that includes a **type**, a **scope** and a **subject**:
+Each commit message consists of a **header**, an optional **body**, and a **footer**. The **header** has a special format that includes a **type**, a **scope** and a **subject**:
 
     <type>(<scope>): <subject>
     <BLANK LINE>
