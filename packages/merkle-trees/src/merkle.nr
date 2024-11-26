@@ -23,7 +23,6 @@ impl MembershipProver<Field, Field, Field> for MerkleTree {
 impl Modifier<Field, Field, Field> for MerkleTree {
     fn add<let N: u32>(&mut self, leaf: Field, indexes: Field, hash_path: [Field; N]) {
         let (old, new) = self.calculate_two_roots(leaf, indexes, hash_path);
-
         assert(old == self.root);
         self.root = new;
     }

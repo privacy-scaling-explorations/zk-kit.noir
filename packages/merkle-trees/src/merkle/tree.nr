@@ -1,5 +1,5 @@
-use crate::merkle::MerkleTree;
 use crate::Calculator;
+use crate::merkle::MerkleTree;
 
 /*
  * Transforms the key into into a big endian array of bits so that when determining the position
@@ -50,22 +50,25 @@ impl Calculator<Field> for MerkleTree {
         indexes: Field,
         hash_path: [Field; N],
     ) -> (Field, Field) {
-        let index_bits: [u1; N] = indexes.to_le_bits();
+        let index_bits: [u1; N] = indexes.to_be_bits();
 
+        // root_with_leaf is a container for hashes to derive the root node for the tree that
+        // includes the entry
         let mut root_with_leaf = leaf;
-        let mut root_without_leaf = 0;
-
+        // root_without_leaf is a container for hashes to derive the root node for the tree that
+        // doesn't include the entry
+        let mut root_without_leaf: Field = 0;
+        // iterate over the levels of the tree from bottom to top
         for i in 0..hash_path.len() {
             let sibling = hash_path[i];
-
-            if (sibling != 0) {
-                if i == hash_path.len() - 1 {
-                    root_without_leaf = hash_path[i];
-                }
-
-                if (index_bits[i] == 0) {
+            // After the first sibling is found, the processes are started to calculate the two root nodes.
+            // The calulcation of the root node that includes the entry is comparable to `calculate_root`.
+            // To calc the root node that doesn't include entry, the first sibling is put into the container
+            // and starting from each SUBSEQUENT iteration it is hashed with its sibling and the resulting hash
+            // again stored in the container until the root is reached
+            if sibling != 0 {
+                if index_bits[i] == 0 {
                     root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
-
                     if (root_without_leaf != sibling) {
                         root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
                     }
@@ -74,7 +77,7 @@ impl Calculator<Field> for MerkleTree {
                     if (root_without_leaf != sibling) {
                         root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
                     }
-                };
+                }
             }
         }
         (root_without_leaf, root_with_leaf)
