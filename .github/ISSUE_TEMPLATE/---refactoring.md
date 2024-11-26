@@ -4,7 +4,6 @@ about: Suggest any improvements for this project
 title: ''
 labels: 'refactoring :recycle:'
 assignees: ''
-
 ---
 
 **Describe the improvement you're thinking about**
