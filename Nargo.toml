@@ -1,2 +1,2 @@
 [workspace]
-members = ["packages/ecdh", "packages/merkle-trees"]
+members = ["packages/ecdh", "packages/merkle-trees", "tests"]
