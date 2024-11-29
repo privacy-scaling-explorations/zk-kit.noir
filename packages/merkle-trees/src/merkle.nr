@@ -1,32 +1,41 @@
-pub use crate::types::{Calculator, MembershipProver, Modifier, MT_Creator};
+pub use crate::types::{Calculator, MembershipProver, Modifier, MT_Creator, OneZero};
 
 pub struct MerkleTree<T> {
-    pub hasher: fn([T; 2]) -> T,
     pub root: T,
+    pub hasher: fn([T; 2]) -> T,
 }
 
-impl<T> MT_Creator<T> for MerkleTree<T> {
+impl<T> MT_Creator<T> for MerkleTree<T>
+where
+    T: Eq + OneZero,
+{
     fn default(root: T, hasher: fn([T; 2]) -> T) -> Self {
         Self { root, hasher }
     }
+
+    fn from(root: T, hasher: fn([T; 2]) -> T) -> Self {
+        Self::default(root, hasher)
+    }
+
+    fn new(hasher: fn([T; 2]) -> T) -> Self {
+        Self::from(T::zero(), hasher)
+    }
 }
 
-impl<T> MembershipProver<T> for MerkleTree<T>
+impl<T> MembershipProver<T, T> for MerkleTree<T>
 where
-    T: Eq,
+    T: Eq + OneZero,
 {
-    type K = T;
-    fn membership<let N: u32>(self, leaf: Self::K, indexes: Field, hash_path: [T; N]) {
+    fn membership<let N: u32>(self, leaf: T, indexes: Field, hash_path: [T; N]) {
         let root = self.calculate_root(leaf, indexes, hash_path);
         assert(self.root == root);
     }
 }
 
-impl<T> Modifier<T> for MerkleTree<T>
+impl<T> Modifier<T, T> for MerkleTree<T>
 where
-    T: Eq,
+    T: Eq + OneZero,
 {
-    type K = T;
     fn add<let N: u32>(&mut self, leaf: T, indexes: Field, hash_path: [T; N]) {
         let (old, new) = self.calculate_two_roots(leaf, indexes, hash_path);
         assert(old == self.root);
@@ -60,24 +69,22 @@ where
     }
 }
 
-impl<T> Calculator<T> for MerkleTree<T>
+impl<T> Calculator<T, T> for MerkleTree<T>
 where
-    T: Eq,
+    T: Eq + OneZero,
 {
-    type K = T;
-
-    fn calculate_root<let N: u32>(self, leaf: Self::K, indexes: Field, hash_path: [T; N]) -> T {
+    fn calculate_root<let N: u32>(self, leaf: T, indexes: Field, hash_path: [T; N]) -> T {
         let index_bits: [u1; N] = indexes.to_le_bits();
         let mut node = leaf;
         for i in 0..hash_path.len() {
             let sibling = hash_path[i];
-            if index_bits[i] != 0 {
-                let mut left = sibling;
-                let mut right = node;
-                if index_bits[i] == 0 {
-                    left = node;
-                    right = sibling;
-                }
+            if index_bits[i] == 0 {
+                let left = node;
+                let right = sibling;
+                node = (self.hasher)([left, right]);
+            } else {
+                let left = sibling;
+                let right = node;
                 node = (self.hasher)([left, right]);
             }
         }
@@ -93,12 +100,7 @@ where
      * @param siblings Contains the siblings from bottom to top
      * @returns Two root nodes: the first one doesn't include entry, the second does
      */
-    fn calculate_two_roots<let N: u32>(
-        self,
-        leaf: Self::K,
-        indexes: Field,
-        hash_path: [T; N],
-    ) -> (T, T) {
+    fn calculate_two_roots<let N: u32>(self, leaf: T, indexes: Field, hash_path: [T; N]) -> (T, T) {
         let index_bits: [u1; N] = indexes.to_be_bits();
 
         // root_with_leaf is a container for hashes to derive the root node for the tree that
@@ -116,17 +118,15 @@ where
             // To calc the root node that doesn't include entry, the first sibling is put into the container
             // and starting from each SUBSEQUENT iteration it is hashed with its sibling and the resulting hash
             // again stored in the container until the root is reached
-            if index_bits[i] != 0 {
-                if index_bits[i] == 0 {
-                    root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
-                    if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
-                    }
-                } else {
-                    root_with_leaf = (self.hasher)([sibling, root_with_leaf]);
-                    if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
-                    }
+            if index_bits[i] == 0 {
+                root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
+                if (root_without_leaf != sibling) {
+                    root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
+                }
+            } else {
+                root_with_leaf = (self.hasher)([sibling, root_with_leaf]);
+                if (root_without_leaf != sibling) {
+                    root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
                 }
             }
         }

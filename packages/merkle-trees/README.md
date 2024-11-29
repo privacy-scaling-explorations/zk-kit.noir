@@ -13,53 +13,58 @@ To use these trees in your project, add the lib to its `Nargo.toml` file. For ex
 trees = { git = "https://github.com/privacy-scaling-explorations/zk-kit.noir", tag = "main", directory = "packages/merkle-trees" }
 ```
 
-And import it in your file. You need to provide a hasher, which is a function that accepts a slice of Fields and returns a Field.
-For merkle trees you also need to make `siblings` into a tuple `(Field, [Field])`, for the indexes and hash_path, respectively.
+And import it in your file.
 
 ### Examples
 
 A Merkle Tree:
 
 ```rust
-use dep::trees::merkle::MerkleTree;
-use dep::std::hash::pedersen_hash_slice;
+use trees::merkle::MerkleTree;
+use std::hash::poseidon2::Poseidon2::hash;
 
-fn hasher(leaves: [Field]) -> Field {
-    pedersen_hash_slice(leaves)
+
+fn hasher(leaves: [Field; 2]) -> Field {
+    hash(leaves, 2)
 }
 
 fn main(
     entry: Field,
-    paths: (Field, [Field; 1]))
+    paths: [Field; 1])
 {
     let mut mt = MerkleTree::new(hasher);
 
-    let siblings = (paths.0, paths.1.as_slice());
-    mt.add(entry, siblings);
-    mt.membership(entry, siblings);
+    // add at index 0
+    mt.add(entry, 0, paths);
+    mt.membership(entry, paths);
 }
 ```
 
 A Sparse Merkle Tree:
 
 ```rust
-use dep::trees::sparse_merkle::SparseMerkleTree;
-use dep::std::hash::pedersen_hash_slice;
+use trees::sparse_merkle::SparseMerkleTree;
+use std::hash::poseidon2::Poseidon2::hash;
 
-fn hasher(leaves: [Field]) -> Field {
-    pedersen_hash_slice(leaves)
+fn hasher(leaves: [Field; 2]) -> Field {
+    hash(leaves, 2)
 }
 
-fn main(entry: (Field, Field), siblings: [Field; 256]) {
-    let mut tree2 = SparseMerkleTree::new(pedersen_hash_slice);
+fn leaves_hasher(leaves: [Field; 3]) -> Field {
+    hash(leaves, 3)
+}
 
-    tree2.non_membership(entry, (0, 0), [0; 256].as_slice());
+fn main(entry: (Field, Field), index: Field, siblings: [Field; 256]) {
+    let mut tree2 = SparseMerkleTree::new(hasher, leaves_hasher);
 
-    tree2.add(entry, siblings.as_slice());
-    tree2.membership(entry, siblings.as_slice());
+    // proving non-membership at index
+    tree2.non_membership(entry, index, [0; 256].as_slice());
+
+    // proving that it was added
+    tree2.add(entry, index, siblings);
 }
 ```
 
 ## Tests
 
-This repository provides tests using pedersen, poseidon and poseidon2 hashes. To test them, `cd` into the folder and run `nargo test`.
+This repository provides tests using pedersen and poseidon2 hashes. To test them, `cd` into the folder and run `nargo test`.

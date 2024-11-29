@@ -1,4 +1,4 @@
-use dep::std::hash::pedersen_hash;
+use std::hash::pedersen_hash;
 use trees::merkle::MerkleTree;
 
 #[test]

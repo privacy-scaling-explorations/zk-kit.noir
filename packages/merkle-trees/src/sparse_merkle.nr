@@ -8,33 +8,42 @@ pub struct SparseMerkleTree<T> {
     pub hasher: fn([T; 2]) -> T,
 }
 
-impl<T> SMT_Creator<T> for SparseMerkleTree<T> {
-    fn default(root: T, leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self {
-        Self { root, leaf_hasher, hasher }
-    }
-}
-
-impl<T> MembershipProver<T> for SparseMerkleTree<T>
+impl<T> SMT_Creator<T> for SparseMerkleTree<T>
 where
     T: Eq + OneZero,
 {
-    type K = (T, T);
-    fn membership<let N: u32>(self, entry: Self::K, indexes: Field, hash_path: [T; N]) {
+    fn default(root: T, leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self {
+        Self { root, leaf_hasher, hasher }
+    }
+
+    fn from(root: T, leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self {
+        Self::default(root, leaf_hasher, hasher)
+    }
+
+    fn new(leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self {
+        Self::from(T::zero(), leaf_hasher, hasher)
+    }
+}
+
+impl<T> MembershipProver<T, (T, T)> for SparseMerkleTree<T>
+where
+    T: Eq + OneZero,
+{
+    fn membership<let N: u32>(self, entry: (T, T), indexes: Field, hash_path: [T; N]) {
         // membership proof: the root is calculated based on the entry, the siblings,
         // and the path determined by the key of entry through consecutive hashing
         assert(self.calculate_root(entry, indexes, hash_path) == self.root);
     }
 }
 
-impl<T> NonMembershipProver<T> for SparseMerkleTree<T>
+impl<T> NonMembershipProver<T, (T, T)> for SparseMerkleTree<T>
 where
     T: Eq + OneZero,
 {
-    type K = (T, T);
     fn non_membership(
         self,
-        entry: Self::K,
-        matching_entry: Self::K,
+        entry: (T, T),
+        matching_entry: (T, T),
         index: Field,
         siblings: [T; 256],
     ) {
@@ -48,12 +57,11 @@ where
     }
 }
 
-impl<T> Modifier<T> for SparseMerkleTree<T>
+impl<T> Modifier<T, (T, T)> for SparseMerkleTree<T>
 where
     T: Eq + OneZero,
 {
-    type K = (T, T);
-    fn add<let N: u32>(&mut self, new_entry: Self::K, index: Field, hash_path: [T; N]) {
+    fn add<let N: u32>(&mut self, new_entry: (T, T), index: Field, hash_path: [T; N]) {
         // if the root node is zero the first leaf is added to the tree in which case
         // the new root equals H(k,v,1)
         // otherwise the correctness of the old root is validated based on the siblings after which
@@ -67,7 +75,7 @@ where
         }
     }
 
-    fn delete<let N: u32>(&mut self, entry: Self::K, indexes: Field, hash_path: [T; N]) {
+    fn delete<let N: u32>(&mut self, entry: (T, T), indexes: Field, hash_path: [T; N]) {
         // proves membership of entry in the old root, then calculates and returns the new root
         let (new, old) = self.calculate_two_roots(entry, indexes, hash_path);
         assert(old == self.root);
@@ -76,8 +84,8 @@ where
 
     fn update<let N: u32>(
         &mut self,
-        new_value: Self::K,
-        old_value: Self::K,
+        new_value: (T, T),
+        old_value: (T, T),
         index: Field,
         hash_path: [T; N],
     ) {
@@ -94,13 +102,13 @@ where
         // resulting hashes until the uppermost level is reached aka the root node
         for i in 0..hash_path.len() {
             let sibling = hash_path[i];
-            if path[i] != 0 {
-                if path[i] == 0 {
-                    new_parent = (self.hasher)([new_parent, sibling]);
-                    old_parent = (self.hasher)([old_parent, sibling]);
-                } else {
+            if sibling != T::zero() {
+                if path[i] != 0 {
                     new_parent = (self.hasher)([sibling, new_parent]);
                     old_parent = (self.hasher)([sibling, old_parent]);
+                } else {
+                    new_parent = (self.hasher)([new_parent, sibling]);
+                    old_parent = (self.hasher)([old_parent, sibling]);
                 }
             }
         }
@@ -109,12 +117,10 @@ where
     }
 }
 
-impl<T> Calculator<T> for SparseMerkleTree<T>
+impl<T> Calculator<T, (T, T)> for SparseMerkleTree<T>
 where
     T: Eq + OneZero,
 {
-    type K = (T, T);
-
     /*
      * Calculates the root for a given tree entry based on the passed array of siblings and the passed path.
      * @param entry The key and value of an entry [k, v]
@@ -122,7 +128,7 @@ where
      * @param path The position of the entry in the tree as represented by bits from bottom to top
      * @returns The calculated root node
      */
-    fn calculate_root<let N: u32>(self, entry: Self::K, indexes: Field, hash_path: [T; N]) -> T {
+    fn calculate_root<let N: u32>(self, entry: (T, T), indexes: Field, hash_path: [T; N]) -> T {
         let index_bits: [u1; N] = indexes.to_be_bits();
 
         // serves as container for hashes and is initialized to be the leaf node
@@ -134,7 +140,7 @@ where
         // until the root node is reached and returned.
         for i in 0..hash_path.len() {
             let sibling = hash_path[i];
-            if index_bits[i] != 0 {
+            if sibling != T::zero() {
                 let mut left = sibling;
                 let mut right = node;
                 if index_bits[i] == 0 {
@@ -158,7 +164,7 @@ where
      */
     fn calculate_two_roots<let N: u32>(
         self,
-        entry: Self::K,
+        entry: (T, T),
         indexes: Field,
         hash_path: [T; N],
     ) -> (T, T) {
@@ -169,7 +175,7 @@ where
         let mut root_with_leaf = (self.leaf_hasher)([entry.0, entry.1, T::one()]);
         // root_without_leaf is a container for hashes to derive the root node for the tree that
         // doesn't include the entry
-        let mut root_without_leaf = hash_path[0];
+        let mut root_without_leaf = T::zero();
         // iterate over the levels of the tree from bottom to top
         for i in 0..hash_path.len() {
             let sibling = hash_path[i];
@@ -178,23 +184,26 @@ where
             // To calc the root node that doesn't include entry, the first sibling is put into the container
             // and starting from each SUBSEQUENT iteration it is hashed with its sibling and the resulting hash
             // again stored in the container until the root is reached
-            if index_bits[i] != 0 {
+            if sibling != T::zero() {
                 if hash_path[i - 1] == T::zero() {
                     root_without_leaf = hash_path[i];
                 }
-                if index_bits[i] == 0 {
-                    root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
-                    if (root_without_leaf != sibling) {
-                        root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
-                    }
-                } else {
+
+                if index_bits[i] != 0 {
                     root_with_leaf = (self.hasher)([sibling, root_with_leaf]);
                     if (root_without_leaf != sibling) {
                         root_without_leaf = (self.hasher)([sibling, root_without_leaf]);
                     }
+                } else {
+                    root_with_leaf = (self.hasher)([root_with_leaf, sibling]);
+
+                    if (root_without_leaf != sibling) {
+                        root_without_leaf = (self.hasher)([root_without_leaf, sibling]);
+                    }
                 }
             }
         }
+
         (root_without_leaf, root_with_leaf)
     }
 }

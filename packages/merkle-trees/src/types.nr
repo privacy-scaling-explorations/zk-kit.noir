@@ -13,14 +13,13 @@ impl OneZero for Field {
     }
 }
 
-pub trait Calculator<T> {
-    type K;
+pub trait Calculator<T, K> {
     fn calculate_root<let N: u32>(self, entry: K, indexes: Field, hash_path: [T; N]) -> T;
     fn calculate_two_roots<let N: u32>(self, entry: K, indexes: Field, hash_path: [T; N]) -> (T, T);
 }
 
 pub trait SMT_Creator<T> {
-    pub fn default(root: T, leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self;
+    pub fn default(root: T, leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self {}
 
     /**
      * Imports an existing Sparse Merkle Tree (SparseMerkleTree) instance.
@@ -41,14 +40,16 @@ pub trait SMT_Creator<T> {
 }
 
 pub trait MT_Creator<T> {
-    pub fn default(root: T, hasher: fn([T; 2]) -> T) -> Self;
+    pub fn default(root: T, hasher: fn([T; 2]) -> T) -> Self {
+        Self { root, hasher }
+    }
 
     /**
      * Imports an existing Sparse Merkle Tree (SparseMerkleTree) instance.
      * @param hasher The hash function that is used to hash the nodes of the tree
      * @param root The root of the tree
      */
-    pub fn from(root: Field, hasher: fn([T; 2]) -> T) -> Self {
+    pub fn from(root: T, hasher: fn([T; 2]) -> T) -> Self {
         Self::default(root, hasher)
     }
 
@@ -57,12 +58,11 @@ pub trait MT_Creator<T> {
      * @param hasher The hash function that is used to hash the nodes of the tree
      */
     pub fn new(hasher: fn([T; 2]) -> T) -> Self {
-        Self::from(0, hasher)
+        Self::from(T::zero(), hasher)
     }
 }
 
-pub trait MembershipProver<T> {
-    type K;
+pub trait MembershipProver<T, K> {
     /**
      * Proves that a leaf is a member of the tree.
      * @param leaf The leaf to prove
@@ -71,8 +71,7 @@ pub trait MembershipProver<T> {
     pub fn membership<let N: u32>(self, entry: K, indexes: Field, hash_path: [T; N]);
 }
 
-pub trait NonMembershipProver<T> {
-    type K;
+pub trait NonMembershipProver<T, K> {
     /**
      * Verifies a non-membership proof, ie it calculates the tree root
      * based on an entry and a matching_entry and all siblings and compares that calculated root
@@ -84,8 +83,7 @@ pub trait NonMembershipProver<T> {
     pub fn non_membership(self, entry: K, matching_entry: K, index: Field, siblings: [T; 256]);
 }
 
-pub trait Modifier<T> {
-    type K;
+pub trait Modifier<T, K> {
     /**
      * Proves the addition of a NEW entry to an existing tree. Based on the siblings first validates the correctness of
      * the old root. Then uses the new entry and the siblings to calculate the new tree root.
