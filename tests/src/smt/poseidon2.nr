@@ -3,7 +3,7 @@ use trees::sparse_merkle::SparseMerkleTree;
 
 #[test]
 fn test_verify_membership_proof() {
-    let root = 0x1fb97f8fa4a6f05b16a3b8c9f76744de200a216e837a71f0c7c29ea927006b40;
+    let root = 0x24d11b806679284b8b632c3356c87edac24b8eb17ec71284579e0ad3a7cd62ee;
     let smt = SparseMerkleTree::from(root, |h| hash(h, 3), |h| hash(h, 2));
 
     let key = 0x01;
@@ -18,7 +18,7 @@ fn test_verify_membership_proof() {
 
 #[test]
 fn test_verify_non_membership_proof() {
-    let root = 0x117a3c51b941cc245ed9139719b6a3d7cedee52056172adc6c0624c7ab0802bc;
+    let root = 0x2151c2f9fdef58b8a33921d853d54895d2d9c7446bc5c9cdbe71e344a5cea1ed;
     let smt = SparseMerkleTree::from(root, |h| hash(h, 3), |h| hash(h, 2));
 
     let key = 0x04;
@@ -26,7 +26,7 @@ fn test_verify_non_membership_proof() {
     let entry = (key, value);
     let matching_entry = (0x02, 0x02);
     let mut siblings: [Field; 256] = [0; 256];
-    siblings[255] = 0x172d81eba79a0df9c5cbe1d9ec427d730cd74c2bc4950389d5200a390377e4b1;
+    siblings[255] = 0x2caff4d2bbd06504be02b53bf953596476bec9448d5a365c05daf1f39812f42;
 
     smt.non_membership(entry, matching_entry, entry.0, siblings);
 }
@@ -41,35 +41,35 @@ fn test_add_first_element() {
     let siblings: [Field; 256] = [0; 256];
     smt.add(entry, entry.0, siblings);
 
-    assert(smt.root == 0x27c9467e3a466973f72dfe56bdeb362fe3158acf84bb79f59a55d722199b8a47);
+    assert(smt.root == 0x2494b80a540ec0a0124a9dba7d5922e3250507677700e9eb680e30a279a72742);
 }
 
 #[test]
 fn test_add_element_to_one_element_tree() {
-    let root = 0x27c9467e3a466973f72dfe56bdeb362fe3158acf84bb79f59a55d722199b8a47;
+    let root = 0x2494b80a540ec0a0124a9dba7d5922e3250507677700e9eb680e30a279a72742;
     let mut smt = SparseMerkleTree::from(root, |h| hash(h, 3), |h| hash(h, 2));
 
     let key = 0x02;
     let value = 0x02;
     let entry = (key, value);
     let mut siblings: [Field; 256] = [0; 256];
-    siblings[255] = 0x27c9467e3a466973f72dfe56bdeb362fe3158acf84bb79f59a55d722199b8a47;
+    siblings[255] = 0x2494b80a540ec0a0124a9dba7d5922e3250507677700e9eb680e30a279a72742;
     smt.add(entry, entry.0, siblings);
-    assert(smt.root == 0x299535cfb103bbd9bb510df9347da1d2e0a8b0e457285f1dfd5780395059623d);
+    assert(smt.root == 0x19a364a28acf3e9de291ea791e0e7f798062926fb4fb286d0038ce048748b49b);
 }
 
 #[test]
 fn test_add_element_to_existing_tree() {
-    let root = 0x299535cfb103bbd9bb510df9347da1d2e0a8b0e457285f1dfd5780395059623d;
+    let root = 0x19a364a28acf3e9de291ea791e0e7f798062926fb4fb286d0038ce048748b49b;
     let mut smt = SparseMerkleTree::from(root, |h| hash(h, 3), |h| hash(h, 2));
 
     let key = 0x03;
     let value = 0x03;
     let entry = (key, value);
     let mut siblings: [Field; 256] = [0; 256];
-    siblings[254] = 0x27c9467e3a466973f72dfe56bdeb362fe3158acf84bb79f59a55d722199b8a47;
-    siblings[255] = 0x1bfe300d0432b4e851095a255b5f6fb9df7d36a913a4cfd7cac46b4dc3327021;
-    let big_tree_root = 0x117a3c51b941cc245ed9139719b6a3d7cedee52056172adc6c0624c7ab0802bc;
+    siblings[254] = 0x2494b80a540ec0a0124a9dba7d5922e3250507677700e9eb680e30a279a72742;
+    siblings[255] = 0x30065fe2f3e2a11bb56ee7dd53657ffa4681ffcfd9403ef43b306996e2c2d022;
+    let big_tree_root = 0x2151c2f9fdef58b8a33921d853d54895d2d9c7446bc5c9cdbe71e344a5cea1ed;
 
     smt.add(entry, entry.0, siblings);
 
@@ -78,16 +78,16 @@ fn test_add_element_to_existing_tree() {
 
 #[test]
 fn test_delete() {
-    let root = 0x117a3c51b941cc245ed9139719b6a3d7cedee52056172adc6c0624c7ab0802bc;
+    let root = 0x2151c2f9fdef58b8a33921d853d54895d2d9c7446bc5c9cdbe71e344a5cea1ed;
     let mut smt = SparseMerkleTree::from(root, |h| hash(h, 3), |h| hash(h, 2));
 
     let key = 0x03;
     let value = 0x03;
     let entry = (key, value);
     let mut siblings: [Field; 256] = [0; 256];
-    siblings[254] = 0x27c9467e3a466973f72dfe56bdeb362fe3158acf84bb79f59a55d722199b8a47;
-    siblings[255] = 0x1bfe300d0432b4e851095a255b5f6fb9df7d36a913a4cfd7cac46b4dc3327021;
-    let small_tree_root = 0x299535cfb103bbd9bb510df9347da1d2e0a8b0e457285f1dfd5780395059623d;
+    siblings[254] = 0x2494b80a540ec0a0124a9dba7d5922e3250507677700e9eb680e30a279a72742;
+    siblings[255] = 0x30065fe2f3e2a11bb56ee7dd53657ffa4681ffcfd9403ef43b306996e2c2d022;
+    let small_tree_root = 0x19a364a28acf3e9de291ea791e0e7f798062926fb4fb286d0038ce048748b49b;
 
     smt.delete(entry, entry.0, siblings);
 
@@ -96,7 +96,7 @@ fn test_delete() {
 
 #[test]
 fn test_update() {
-    let root = 0x117a3c51b941cc245ed9139719b6a3d7cedee52056172adc6c0624c7ab0802bc;
+    let root = 0x2151c2f9fdef58b8a33921d853d54895d2d9c7446bc5c9cdbe71e344a5cea1ed;
     let mut smt = SparseMerkleTree::from(root, |h| hash(h, 3), |h| hash(h, 2));
 
     let key = 0x03;
@@ -105,9 +105,9 @@ fn test_update() {
     let old_entry = (key, old_value);
     let new_entry = (key, new_value);
     let mut siblings: [Field; 256] = [0; 256];
-    siblings[254] = 0x27c9467e3a466973f72dfe56bdeb362fe3158acf84bb79f59a55d722199b8a47;
-    siblings[255] = 0x1bfe300d0432b4e851095a255b5f6fb9df7d36a913a4cfd7cac46b4dc3327021;
-    let big_tree_root = 0x1bc7c7ffbfbb8a474496aa06c2a8da387497f86e9109c98ea0f4802f849b69b8;
+    siblings[254] = 0x2494b80a540ec0a0124a9dba7d5922e3250507677700e9eb680e30a279a72742;
+    siblings[255] = 0x30065fe2f3e2a11bb56ee7dd53657ffa4681ffcfd9403ef43b306996e2c2d022;
+    let big_tree_root = 0x2e5b3426d92c302ae39a83d4269d9cf53f008f20b1dbda456d7fee525be320bb;
 
     smt.update(new_entry, old_entry, old_entry.0, siblings);
 

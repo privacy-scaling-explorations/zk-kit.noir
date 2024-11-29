@@ -5,5 +5,5 @@ authors = ["fabianschu", "signorecello"]
 compiler_version = ">=0.36.0"
 
 [dependencies]
-bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "v0.4.2" }
+bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "zpedro/default_trait" }
 trees = { path = "../packages/merkle-trees" }

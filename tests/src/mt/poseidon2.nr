@@ -1,9 +1,5 @@
-use bignum::BigNum;
-use bignum::fields::bn254Fq::BN254_Fq_Params;
 use std::hash::poseidon2::Poseidon2::hash;
 use trees::merkle::MerkleTree;
-
-type BN = BigNum<3, 254, BN254_Fq_Params>;
 
 #[test]
 fn test_merkle_tree_membership() {
@@ -25,18 +21,6 @@ fn test_merkle_tree_add() {
     let paths = [0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e];
     mt.add(leaf, 0x01, paths);
 }
-
-// #[test]
-// fn test_merkle_tree_add_bignum() {
-//     let old_root: BN = BigNum::from_slice([
-//         0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e,
-//     ]);
-//     let mut mt = MerkleTree::from(old_root, poseidon2_hasher);
-
-//     let leaf = 0x2bc00d90b885b09d12764e764410f7f693f514f7f3ca14d916741ff3968b3079;
-//     let paths = [0x21447efbbddb57d6fc5ad24d906388492e82c44e5160425258dd4ea995e3a06e];
-//     mt.add(leaf, 0x01, paths);
-// }
 
 #[test]
 fn test_merkle_tree_delete() {

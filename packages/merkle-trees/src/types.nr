@@ -1,18 +1,3 @@
-pub trait OneZero {
-    fn one() -> Self;
-    fn zero() -> Self;
-}
-
-impl OneZero for Field {
-    fn one() -> Self {
-        1
-    }
-
-    fn zero() -> Self {
-        0
-    }
-}
-
 pub trait Calculator<T, K> {
     fn calculate_root<let N: u32>(self, entry: K, indexes: Field, hash_path: [T; N]) -> T;
     fn calculate_two_roots<let N: u32>(self, entry: K, indexes: Field, hash_path: [T; N]) -> (T, T);
@@ -58,7 +43,7 @@ pub trait MT_Creator<T> {
      * @param hasher The hash function that is used to hash the nodes of the tree
      */
     pub fn new(hasher: fn([T; 2]) -> T) -> Self {
-        Self::from(T::zero(), hasher)
+        Self::from(T::default(), hasher)
     }
 }
 

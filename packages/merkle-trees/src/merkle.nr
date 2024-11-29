@@ -1,4 +1,4 @@
-pub use crate::types::{Calculator, MembershipProver, Modifier, MT_Creator, OneZero};
+pub use crate::types::{Calculator, MembershipProver, Modifier, MT_Creator};
 
 pub struct MerkleTree<T> {
     pub root: T,
@@ -7,7 +7,7 @@ pub struct MerkleTree<T> {
 
 impl<T> MT_Creator<T> for MerkleTree<T>
 where
-    T: Eq + OneZero,
+    T: Eq + Default,
 {
     fn default(root: T, hasher: fn([T; 2]) -> T) -> Self {
         Self { root, hasher }
@@ -18,13 +18,13 @@ where
     }
 
     fn new(hasher: fn([T; 2]) -> T) -> Self {
-        Self::from(T::zero(), hasher)
+        Self::from(T::default(), hasher)
     }
 }
 
 impl<T> MembershipProver<T, T> for MerkleTree<T>
 where
-    T: Eq + OneZero,
+    T: Eq + Default,
 {
     fn membership<let N: u32>(self, leaf: T, indexes: Field, hash_path: [T; N]) {
         let root = self.calculate_root(leaf, indexes, hash_path);
@@ -34,7 +34,7 @@ where
 
 impl<T> Modifier<T, T> for MerkleTree<T>
 where
-    T: Eq + OneZero,
+    T: Eq + Default,
 {
     fn add<let N: u32>(&mut self, leaf: T, indexes: Field, hash_path: [T; N]) {
         let (old, new) = self.calculate_two_roots(leaf, indexes, hash_path);
@@ -71,7 +71,7 @@ where
 
 impl<T> Calculator<T, T> for MerkleTree<T>
 where
-    T: Eq + OneZero,
+    T: Eq + Default,
 {
     fn calculate_root<let N: u32>(self, leaf: T, indexes: Field, hash_path: [T; N]) -> T {
         let index_bits: [u1; N] = indexes.to_le_bits();
@@ -108,10 +108,13 @@ where
         let mut root_with_leaf = leaf;
         // root_without_leaf is a container for hashes to derive the root node for the tree that
         // doesn't include the entry
-        let mut root_without_leaf = hash_path[0];
+        let mut root_without_leaf = T::default();
 
         // iterate over the levels of the tree from bottom to top
         for i in 0..hash_path.len() {
+            if i == 0 {
+                root_without_leaf = hash_path[i];
+            }
             let sibling = hash_path[i];
             // After the first sibling is found, the processes are started to calculate the two root nodes.
             // The calulcation of the root node that includes the entry is comparable to `calculate_root`.
