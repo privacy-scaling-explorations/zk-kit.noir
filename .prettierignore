@@ -1,7 +1,6 @@
 # dependencies
 node_modules
-yarn.lock
-.yarn
+bun.lockb
 
 # github
 .github/ISSUE_TEMPLATE

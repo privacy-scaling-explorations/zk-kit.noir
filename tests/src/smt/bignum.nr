@@ -103,7 +103,7 @@ fn test_sparse_merkle_tree_non_membership_bignum() {
         ]),
     );
 
-    smt.non_membership(entry, matching_entry, 0x01, siblings);
+    smt.non_membership(matching_entry, 0x01, siblings);
 }
 
 // #[test]

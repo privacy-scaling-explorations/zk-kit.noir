@@ -1,5 +1,5 @@
 mod globals;
-use dep::std::ec::tecurve::affine::{Curve, Point};
+use ec::tecurve::affine::{Curve, Point};
 
 // @@@@@@ Core ECDH Implementation
 

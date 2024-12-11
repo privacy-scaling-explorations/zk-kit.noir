@@ -38,13 +38,7 @@ impl<T> NonMembershipProver<T, (T, T)> for SparseMerkleTree<T>
 where
     T: Eq + Default,
 {
-    fn non_membership(
-        self,
-        entry: (T, T),
-        matching_entry: (T, T),
-        index: Field,
-        siblings: [T; 256],
-    ) {
+    fn non_membership(self, matching_entry: (T, T), index: Field, siblings: [T; 256]) {
         if (self.root != T::default()) {
             // non-membership proof: the root is calculated based on the matching_entry, the siblings
             // and the path that is determined by the key of entry. This makes sure that matching_entry is in fact
@@ -61,7 +55,7 @@ where
 {
     fn add<let N: u32>(&mut self, new_entry: (T, T), index: Field, hash_path: [T; N]) {
         // if the root node is zero the first leaf is added to the tree in which case
-        // the new root equals H(k,v,1)
+        // the new root equals H(k,v,T::default())
         // otherwise the correctness of the old root is validated based on the siblings after which
         // the new root is calculated and returned
         if (self.root == T::default()) {

@@ -23,7 +23,7 @@ nargo compile
 To run the tests for this library, use the following command:
 
 ```bash
-yarn test
+bun run test
 ```
 
 ## Running Tests with Mocha

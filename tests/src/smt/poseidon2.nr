@@ -28,7 +28,7 @@ fn test_verify_non_membership_proof() {
     let mut siblings: [Field; 256] = [0; 256];
     siblings[255] = 0x2caff4d2bbd06504be02b53bf953596476bec9448d5a365c05daf1f39812f42;
 
-    smt.non_membership(entry, matching_entry, entry.0, siblings);
+    smt.non_membership(matching_entry, entry.0, siblings);
 }
 
 #[test]
