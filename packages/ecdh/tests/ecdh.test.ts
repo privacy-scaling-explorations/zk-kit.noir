@@ -1,4 +1,4 @@
-import { BarretenbergBackend } from '@noir-lang/backend_barretenberg'
+import { UltraHonkBackend } from '@aztec/bb.js'
 import { Noir } from '@noir-lang/noir_js'
 import { ProofData } from '@noir-lang/types'
 import { expect } from 'chai'
@@ -13,14 +13,14 @@ function generatePrivateKey(): Uint8Array {
 
 describe('ECDH Circuit Tests', function() {
   let noir: Noir
-  let backend: BarretenbergBackend
+  let backend: UltraHonkBackend
   let correctProof: ProofData
 
   beforeEach(async () => {
     const circuitFile = readFileSync(resolve(__dirname, '../../../target/ecdh.json'), 'utf-8')
     const circuit = JSON.parse(circuitFile)
-    backend = new BarretenbergBackend(circuit)
-    noir = new Noir(circuit, backend)
+    backend = new UltraHonkBackend(circuit.bytecode)
+    noir = new Noir(circuit)
     const pk1 = generatePrivateKey()
     const pk2 = generatePrivateKey()
 
@@ -30,7 +30,9 @@ describe('ECDH Circuit Tests', function() {
       private_key2: Array.from(pk2),
     }
 
-    correctProof = await noir.generateProof(input)
+    const { witness } = await noir.execute(input)
+
+    correctProof = await backend.generateProof(witness)
   })
 
   it('Should generate valid proof for correct input', async function() {
@@ -39,7 +41,7 @@ describe('ECDH Circuit Tests', function() {
 
   it('Should verify valid proof for correct input', async function() {
     expect(correctProof).to.not.be.undefined // Ensure proof is generated
-    const verification = await noir.verifyProof(correctProof)
+    const verification = await backend.verifyProof(correctProof)
     expect(verification).to.be.true
   })
 })

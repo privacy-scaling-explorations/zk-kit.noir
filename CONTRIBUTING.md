@@ -43,7 +43,7 @@ When you submit your PR (or later change that code), a CI build will automatical
 
 ### Code rules
 
-We always use ESLint and Prettier. To check that your code follows the rules, simply run the npm script `yarn lint`.
+We always use ESLint and Prettier. To check that your code follows the rules, simply run the npm script `bun lint`.
 
 ### Commits rules
 

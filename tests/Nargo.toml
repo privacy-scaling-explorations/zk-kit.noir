@@ -1,0 +1,9 @@
+[package]
+name = "merkle_trees"
+type = "lib"
+authors = ["fabianschu", "signorecello"]
+compiler_version = ">=0.39.0"
+
+[dependencies]
+bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "zpedro/default_trait" }
+trees = { path = "../packages/merkle-trees" }

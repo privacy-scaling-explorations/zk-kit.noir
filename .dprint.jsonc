@@ -5,14 +5,7 @@
     "semiColons": "asi",
     "useBraces": "preferNone",
   },
-  "excludes": [
-    "**/node_modules",
-    "yarn.lock",
-    ".yarn",
-    "packages/merkle-trees/src/globals.nr",
-    "packages/ecdh/src/globals.nr",
-    "target/",
-  ],
+  "excludes": ["**/node_modules", "bun.lockb", "packages/ecdh/src/globals.nr", "target/"],
   "plugins": [
     "https://plugins.dprint.dev/json-0.19.4.wasm",
     "https://plugins.dprint.dev/markdown-0.17.8.wasm",

@@ -55,10 +55,10 @@
 
 ## 🗂️ Repositories
 
-- Javascript: https://github.com/privacy-scaling-explorations/zk-kit
-- Solidity: https://github.com/privacy-scaling-explorations/zk-kit.solidity
-- Circom: https://github.com/privacy-scaling-explorations/zk-kit.circom
-- Noir: https://github.com/privacy-scaling-explorations/zk-kit.noir
+- Javascript: <https://github.com/privacy-scaling-explorations/zk-kit>
+- Solidity: <https://github.com/privacy-scaling-explorations/zk-kit.solidity>
+- Circom: <https://github.com/privacy-scaling-explorations/zk-kit.circom>
+- Noir: <https://github.com/privacy-scaling-explorations/zk-kit.noir>
 
 ## 📦 Packages
 
@@ -72,7 +72,7 @@
 - 🐛 Create a report if you find any [bugs](https://github.com/privacy-scaling-explorations/zk-kit.noir/issues/new?assignees=&labels=bug+%F0%9F%90%9B&template=---bug.md&title=) in the code
 
 > [!NOTE]\
-> Need inspiration? Check this list of circuits from the Aztec team: https://aztecnetwork.notion.site/f06968995c124de1be359459775ca2cb?v=613d3cb893dd46899a5bd3793b01e63b.
+> Need inspiration? Check this list of circuits from the Aztec team: <https://aztecnetwork.notion.site/f06968995c124de1be359459775ca2cb?v=613d3cb893dd46899a5bd3793b01e63b>.
 
 ## 🛠 Install
 
@@ -85,7 +85,7 @@ git clone https://github.com/privacy-scaling-explorations/zk-kit.noir.git
 and install the dependencies:
 
 ```bash
-cd zk-kit.noir && yarn
+cd zk-kit.noir && bun
 ```
 
 ## 📜 Usage
@@ -103,5 +103,5 @@ git commit
 Test the code with:
 
 ```bash
-yarn test
+bun run test
 ```

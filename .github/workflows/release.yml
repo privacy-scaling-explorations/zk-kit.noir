@@ -17,27 +17,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: Install Node.js and Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-          cache: yarn
-          registry-url: "https://registry.npmjs.org"
+          bun-version: latest
 
       - name: Authentication
         run: |
-          echo npmAuthToken: "$NODE_AUTH_TOKEN" >> ./.yarnrc.yml
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install dependencies
-        run: yarn
+        run: bun install
 
       - name: Publish packages
-        run: yarn version:publish
+        run: bun run version:publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - run: yarn version:release
+      - name: Create GitHub Release
+        run: bun run version:release
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -11,8 +11,8 @@
     "fmt": "concurrently -c auto -n dprint,noirfmt 'dprint fmt' 'nargo fmt'",
     "postinstall": "husky && git config --local core.editor cat",
     "build": "nargo compile",
-    "test": "npm run build && mocha && nargo test --workspace",
-    "version:release": "changelogithub"
+    "test": "bun run build && mocha && nargo test --workspace",
+    "version:release": "bunx changelogithub"
   },
   "keywords": [
     "zk-kit",
@@ -24,17 +24,15 @@
   "workspaces": [
     "packages/*"
   ],
-  "packageManager": "yarn@4.2.1",
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@noir-lang/backend_barretenberg": "^0.30.0",
-    "@noir-lang/noir_js": "^0.30.0",
-    "@noir-lang/noir_wasm": "^0.32.0",
+    "@aztec/bb.js": "^0.63.0",
+    "@noir-lang/noir_js": "^0.39.0",
+    "@noir-lang/noir_wasm": "^0.39.0",
     "@types/chai": "^4",
     "@types/mocha": "^10",
     "chai": "^4.5.0",
-    "changelogithub": "patch:changelogithub@npm%3A0.13.3#~/.yarn/patches/changelogithub-npm-0.13.3-1783949906.patch",
     "concurrently": "^9.1.0",
     "czg": "^1.9.1",
     "dprint": "^0.46.3",

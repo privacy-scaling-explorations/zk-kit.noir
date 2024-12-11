@@ -1,5 +1,6 @@
 // Globals Edward Curves supported Baby JubJub
-use dep::std::ec::consts::te::baby_jubjub;
+use ec::consts::te::{baby_jubjub, BabyJubjub};
+use ec::tecurve::affine::Point;
 
-global BJJ = baby_jubjub();
-global G = BJJ.base8;
+global BJJ: BabyJubjub = baby_jubjub();
+global G: Point = BJJ.base8;
