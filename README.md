@@ -51,7 +51,7 @@
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 > [!IMPORTANT]\
-> Installation of [Nargo](https://noir-lang.org/getting_started/nargo_installation) required for circuit tests.
+> Installation of [Nargo](https://noir-lang.org/docs/getting_started/noir_installation) required for circuit tests.
 
 ## 🗂️ Repositories
 
