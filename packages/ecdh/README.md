@@ -1,35 +1,28 @@
-# ECDH Library using Baby JubJub Curve
+# ECDH Library
 
-This repository introduces a set of functions and utilities for elliptic curve cryptography using the Baby JubJub curve. The library provides essential operations for the Elliptic Curve Diffie-Hellman (ECDH) protocol, along with utility functions for key generation, field element conversion, and shared key computation.
+This repository introduces a set of functions and utilities for elliptic curve cryptography using. The library provides essential operations for the Elliptic Curve Diffie-Hellman (ECDH) protocol, along with utility functions for key generation, field element conversion, and shared key computation.
+
+At the moment only Baby JubJub is supported, feel free to contribute with more curves.
 
 ## Features
 
-- **Byte Array to Field Element Conversion:** Utility functions to convert byte arrays into field elements for use in elliptic curve operations.
-- **Public Key Generation:** Generate public keys from private keys using the Baby JubJub curve, with both standard and optimized methods.
-- **Shared Key Computation:** Compute shared keys for secure communication using the ECDH protocol.
-- **Main Function:** A main function to generate ECDH shared keys, demonstrating the usage of the library.
-- **Testing:** Comprehensive tests to verify the correctness of key derivation and field conversion functions.
+- **Public Key Generation:** Generate public keys from private keys.
+- **Shared Key Computation:** Compute shared keys for secure communication.
 
-## Compiling the Circuit
+## Usage
 
-To compile the circuit, navigate one directory above the source code and run the following command:
+To use this library, add the dependency to your `Nargo.toml`:
 
-```bash
-nargo compile
+```toml
+ecdh = { git = "https://github.com/privacy-scaling-explorations/zk-kit.noir", tag = "main", directory = "packages/ecdh" }
 ```
 
-## Running Tests
+You can then import the ECDH implementation for the curve you're working with, like so:
 
-To run the tests for this library, use the following command:
+```rust
+use ecdh::bjj::BJJ; // only Baby JubJub is supported at the moment
+let ecdh = BJJ::new(your_private_key);
+let public_key = ecdh.derive_public_key();
 
-```bash
-bun run test
-```
-
-## Running Tests with Mocha
-
-To run the tests using Mocha with TypeScript, use the following command:
-
-```bash
-npx mocha -r ts-node/register tests/ecdh.tests.ts
+let shared_key = ecdh.derive_shared_key(someone_elses_public_key);
 ```

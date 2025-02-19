@@ -1,9 +1,11 @@
 [package]
-name = "merkle_trees"
+name = "zk_kit_tests"
 type = "lib"
-authors = ["fabianschu", "signorecello"]
+authors = ["signorecello"]
 compiler_version = ">=0.39.0"
 
 [dependencies]
 bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "zpedro/default_trait" }
 trees = { path = "../packages/merkle-trees" }
+ecdh = { path = "../packages/ecdh" }
+ec = { tag = "master", git = "https://github.com/noir-lang/ec" }
