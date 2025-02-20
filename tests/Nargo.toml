@@ -4,7 +4,7 @@ type = "lib"
 authors = ["signorecello"]
 
 [dependencies]
-bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "zpedro/default_trait" }
+bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "main" }
 trees = { path = "../packages/merkle-trees" }
 ecdh = { path = "../packages/ecdh" }
 ec = { tag = "master", git = "https://github.com/noir-lang/ec" }

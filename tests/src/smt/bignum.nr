@@ -17,7 +17,7 @@ fn hasher<let N: u32>(input: [BN; N]) -> BN {
 
 #[test]
 fn test_sparse_merkle_tree_add_bignum() {
-    let mut smt = SparseMerkleTree::new(hasher, hasher);
+    let mut smt: SparseMerkleTree<BN> = SparseMerkleTree::new(hasher, hasher);
 
     let key = BN::from_slice([0x01, 0x00, 0x00]);
     let value = BN::from_slice([
