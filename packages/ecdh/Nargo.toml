@@ -2,7 +2,7 @@
 name = "ecdh"
 type = "lib"
 authors = ["YashBit", "signorecello"]
-compiler_version = ">=0.39.0"
+compiler_version = ">=1.0.0-beta.1"
 
 [dependencies]
 ec = { tag = "master", git = "https://github.com/noir-lang/ec" }
