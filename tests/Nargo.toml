@@ -2,7 +2,6 @@
 name = "zk_kit_tests"
 type = "lib"
 authors = ["signorecello"]
-compiler_version = ">=0.39.0"
 
 [dependencies]
 bignum = { git = "https://github.com/noir-lang/noir-bignum", tag = "zpedro/default_trait" }
