@@ -20,7 +20,7 @@ pub trait SMT_Creator<T> {
      * @param hasher The hash function that is used to hash the nodes of the tree
      */
     pub fn new(leaf_hasher: fn([T; 3]) -> T, hasher: fn([T; 2]) -> T) -> Self {
-        Self::from(0, leaf_hasher, hasher)
+        Self::from(T::default(), leaf_hasher, hasher)
     }
 }
 
