@@ -52,7 +52,7 @@ fn main(entry: Field, paths: [Field; 0]) {
 
 ## Sparse Merkle Tree
 
-The Sparse Merkle Tree introduces some overhead but it's quite convenient, since the index of a leaf is determined by its hash. This makes it very useful to prove that a leaf is _not_ on the tree (since it cannot be found at its index). For this reason, it has a predefined depth of 256 accounting for 32-byte leaves.
+The Sparse Merkle Tree introduces some overhead but it's quite convenient, since the index of a leaf is determined by its hash. This makes it very useful to prove that a leaf is _not_ on the tree (since it cannot be found at its index). For this reason, it has a predefined depth of 254 accounting for 32-byte leaves.
 
 Similarly to the Merkle Tree, you need to provide a hasher, but also a leaf hasher. This is because the leaves are hashed with a default value to mark that they're leaves and not nodes.
 
@@ -77,11 +77,11 @@ fn leaf_hasher(leaves: [Field; 3]) -> Field {
     hash(leaves, 3)
 }
 
-fn main(entry: (Field, Field), index: Field, siblings: [Field; 256]) {
+fn main(entry: (Field, Field), index: Field, siblings: [Field; 254]) {
     let mut tree2 = SparseMerkleTree::new(leaf_hasher, hasher);
 
     // proving non-membership at index
-    tree2.non_membership(entry, entry, index, [0; 256]);
+    tree2.non_membership(entry, entry, index, [0; 254]);
 
     // proving that it was added
     tree2.add(entry, index, siblings);
