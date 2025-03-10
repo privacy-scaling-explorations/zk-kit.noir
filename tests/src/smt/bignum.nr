@@ -8,7 +8,7 @@ type BN = BigNum<3, 254, BN254_Fq_Params>;
 fn hasher<let N: u32>(input: [BN; N]) -> BN {
     let mut limbs: [Field] = &[];
     for i in 0..N {
-        limbs = limbs.append(input[i].get_limbs_slice());
+        limbs = limbs.append(input[i].get_limbs_slice().map(|limb| limb as Field));
     }
     let limbs_arr: [Field; 3 * N] = limbs.as_array();
     let hash_field: [u8; 32] = hash(limbs_arr, 3 * N).to_be_bytes();
