@@ -8,7 +8,7 @@ type BN = BigNum<3, 254, BN254_Fq_Params>;
 fn hasher<let N: u32>(input: [BN; N]) -> BN {
     let mut limbs: [Field] = &[];
     for i in 0..N {
-        limbs = limbs.append(input[i].get_limbs_slice());
+        limbs = limbs.append(input[i].get_limbs_slice().map(|limb| limb as Field));
     }
     let limbs_arr: [Field; 3 * N] = limbs.as_array();
     let hash_field: [u8; 32] = hash(limbs_arr, 3 * N).to_be_bytes();
@@ -25,7 +25,7 @@ fn test_sparse_merkle_tree_add_bignum() {
         0x412fba0629bcca2a2295b619e5c5c6,
         0x03fa,
     ]);
-    let siblings: [BN; 256] = [BN::new(); 256];
+    let siblings: [BN; 254] = [BN::new(); 254];
     smt.add((key, value), 0x01, siblings);
     assert(
         smt.root
@@ -53,8 +53,8 @@ fn test_sparse_merkle_tree_add_really_bignum() {
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
     ]);
 
-    let mut siblings: [BN; 256] = [BN::default(); 256];
-    siblings[255] = BN::from_slice([
+    let mut siblings: [BN; 254] = [BN::default(); 254];
+    siblings[253] = BN::from_slice([
         0x1be857787743ed2a6e1243c3c4234c,
         0x282e99f6ba97ce4a5e6c6dcc1987b3,
         0x3ed4,
@@ -88,8 +88,8 @@ fn test_sparse_merkle_tree_non_membership_bignum() {
     ]);
 
     let entry = (key, value);
-    let mut siblings: [BN; 256] = [BN::new(); 256];
-    siblings[255] = BN::from_slice([
+    let mut siblings: [BN; 254] = [BN::new(); 254];
+    siblings[253] = BN::from_slice([
         0x1be857787743ed2a6e1243c3c4234c,
         0x282e99f6ba97ce4a5e6c6dcc1987b3,
         0x3ed4,
@@ -115,8 +115,8 @@ fn test_sparse_merkle_tree_non_membership_bignum() {
 //     let value = 0x04;
 //     let entry = (key, value);
 //     let matching_entry = (0x02, 0x02);
-//     let mut siblings: [Field; 256] = [0; 256];
-//     siblings[255] = 0x2caff4d2bbd06504be02b53bf953596476bec9448d5a365c05daf1f39812f42;
+//     let mut siblings: [Field; 254] = [0; 254];
+//     siblings[253] = 0x2caff4d2bbd06504be02b53bf953596476bec9448d5a365c05daf1f39812f42;
 
 //     smt.non_membership(entry, matching_entry, entry.0, siblings);
 // }
