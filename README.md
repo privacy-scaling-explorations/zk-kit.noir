@@ -85,7 +85,7 @@ git clone https://github.com/privacy-scaling-explorations/zk-kit.noir.git
 and install the dependencies:
 
 ```bash
-cd zk-kit.noir && bun
+cd zk-kit.noir && bun install
 ```
 
 ## 📜 Usage
