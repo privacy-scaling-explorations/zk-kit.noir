@@ -12,7 +12,8 @@
     "postinstall": "husky && git config --local core.editor cat",
     "build": "nargo compile",
     "test": "bun run build && mocha && nargo test --workspace",
-    "version:release": "bunx changelogithub"
+    "version:tag": "git tag ${0}-v${1}",
+    "version:release": "changelogithub"
   },
   "keywords": [
     "zk-kit",
@@ -25,14 +26,15 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@aztec/bb.js": "^0.63.0",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@aztec/bb.js": "^0.63.0",
     "@noir-lang/noir_js": "^0.39.0",
     "@noir-lang/noir_wasm": "^0.39.0",
     "@types/chai": "^4",
     "@types/mocha": "^10",
     "chai": "^4.5.0",
+    "changelogithub": "^13.13.0",
     "concurrently": "^9.1.0",
     "czg": "^1.9.1",
     "dprint": "^0.46.3",

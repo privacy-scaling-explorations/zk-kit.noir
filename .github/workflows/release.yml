@@ -22,19 +22,8 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Authentication
-        run: |
-          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Install dependencies
         run: bun install
-
-      - name: Publish packages
-        run: bun run version:publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         run: bun run version:release
