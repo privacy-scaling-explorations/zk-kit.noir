@@ -105,3 +105,21 @@ Test the code with:
 ```bash
 bun run test
 ```
+
+### Releases
+
+1. Create a new git tag:
+
+```bash
+yarn version:tag <package-name> <version>
+# e.g. yarn version:tag binary-merkle-root 0.0.1
+```
+
+2. Push the new git tag:
+
+```bash
+git push origin <package-name>-<version>
+# e.g. git push origin binary-merkle-root-v0.0.1
+```
+
+After pushing the new git tag, a workflow will be triggered and will release a new version on Github with its changelog automatically.
