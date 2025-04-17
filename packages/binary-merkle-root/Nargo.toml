@@ -1,0 +1,4 @@
+[package]
+name = "binary_merkle_root"
+type = "lib"
+authors = ["vplasencia"]
