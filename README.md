@@ -111,8 +111,8 @@ bun run test
 1. Create a new git tag:
 
 ```bash
-yarn version:tag <package-name> <version>
-# e.g. yarn version:tag binary-merkle-root 0.0.1
+bun version:tag <package-name> <version>
+# e.g. bun version:tag binary-merkle-root 0.0.1
 ```
 
 2. Push the new git tag:
