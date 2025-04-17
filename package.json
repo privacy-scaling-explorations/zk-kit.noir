@@ -12,7 +12,7 @@
     "postinstall": "husky && git config --local core.editor cat",
     "build": "nargo compile",
     "test": "bun run build && mocha && nargo test --workspace",
-    "version:tag": "git tag ${0}-v${1}",
+    "version:tag": "bun scripts/create-tag.ts",
     "version:release": "changelogithub"
   },
   "keywords": [
