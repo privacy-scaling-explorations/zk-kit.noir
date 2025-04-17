@@ -1,6 +1,6 @@
 # Binary Merkle Root Library
 
-This project contains the Binary Merkle Root Noir circuit. It's used to calculate the Merkle root of a binary tree (including the LeanIMT).
+This project contains the Binary Merkle Root Noir circuit. It's used to calculate the root of a binary Merkle tree (including the LeanIMT).
 
 ## Import the library
 
@@ -8,7 +8,7 @@ To import the library, add the lib to the `Nargo.toml` file. For example:
 
 ```toml
 [dependencies]
-binary_merkle_root = { git = "https://github.com/privacy-scaling-explorations/zk-kit.noir", tag = "main", directory = "packages/binary-merkle-root" }
+binary_merkle_root = { git = "https://github.com/privacy-scaling-explorations/zk-kit.noir", tag = "binary-merkle-root-v0.0.1", directory = "packages/binary-merkle-root" }
 ```
 
 You can find all released versions of the `binary-merkle-root` circuit at the following link: https://github.com/privacy-scaling-explorations/zk-kit.noir/releases?q=binary-merkle-root&expanded=true
