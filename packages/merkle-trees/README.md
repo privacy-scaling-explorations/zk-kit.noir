@@ -14,7 +14,7 @@ To use these trees in your project, add the lib to its `Nargo.toml` file. For ex
 
 ```toml
 [dependencies]
-trees = { git = "https://github.com/privacy-scaling-explorations/zk-kit.noir", tag = "main", directory = "packages/merkle-trees" }
+trees = { git = "https://github.com/privacy-scaling-explorations/zk-kit.noir", tag = "merkle-trees-v0.0.1", directory = "packages/merkle-trees" }
 ```
 
 And import it in your file.

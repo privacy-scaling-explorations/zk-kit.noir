@@ -64,6 +64,7 @@
 
 - [merkle-trees](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/merkle-trees)
 - [ecdh](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/ecdh)
+- [binary-merkle-root](https://github.com/privacy-scaling-explorations/zk-kit.noir/tree/main/packages/binary-merkle-root)
 
 ## 👥 Ways to contribute
 
