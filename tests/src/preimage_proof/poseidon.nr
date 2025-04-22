@@ -18,14 +18,14 @@ pub fn test_poseidon_preimage() {
     // Test single input
     let preimage = 42;
     let expected_hash = poseidon_hash_1(preimage);
-    
+
     // This should pass as the hash matches
     PreimageProof::prove_field(preimage, expected_hash, poseidon_hash_1);
-    
+
     // Multi-input test (simplified to use single field)
     let multi_preimage = 123;
     let multi_expected_hash = poseidon_hash_3(multi_preimage);
-    
+
     // This should pass as the hash matches
     PreimageProof::prove_field(multi_preimage, multi_expected_hash, poseidon_hash_3);
 }
